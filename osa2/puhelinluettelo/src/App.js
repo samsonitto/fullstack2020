@@ -5,40 +5,52 @@ import PlainText from './components/PlainText'
 
 const App = () => {
   const [ persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas',
+      number: '040000000'
+    }
   ]) 
   const [ newName, setNewName ] = useState('')
+  const [ newNumber, setNewNumber ] = useState('')
 
   const handleAddClick = (e) => {
     e.preventDefault()
-    let newObject = {
-      name: newName
+    if(newName === '') {
+      alert("Input Name")
     }
-
-    if(persons.some(person => person.name === newName)) {
-      alert(`${newName} is already in the phonebook`)
+    else if (newNumber === '') {
+      alert("Input Number")
     } else {
-      setPersons(persons.concat(newObject))
-      setNewName('')
-      document.getElementById('nameInput0').value = ''
+      let newObject = {
+        name: newName,
+        number: newNumber
+      }
+  
+      if(persons.some(person => person.name === newName)) {
+        alert(`${newName} is already in the phonebook`)
+      } else {
+        setPersons(persons.concat(newObject))
+        setNewName('')
+        document.getElementById('nameInput0').value = ''
+        document.getElementById('numberInput0').value = ''
+      }
     }
-    
   }
 
   const handleAddOnChange = (e) => {
     setNewName(e.target.value)
-    console.log(newName);
-    
   }
 
-  console.log(persons);
+  const handleAddNumberOnChange = (e) => {
+    setNewNumber(e.target.value)
+  }
 
   return (
     <div>
       <h2>Phonebook</h2>
       <form>
         <div>
-          Name: <Input placeholder={'Nimi..'} handleOnChange={handleAddOnChange} id={'nameInput0'} />
+          Name: <Input placeholder={'Name..'} handleOnChange={handleAddOnChange} id={'nameInput0'} /><br />
+          Number: <Input placeholder={'Number..'} handleOnChange={handleAddNumberOnChange} id={'numberInput0'} />
         </div>
         <div>
           <Button type={'submit'} handleClick={handleAddClick} text={'Add'} />
@@ -46,7 +58,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       {persons.map((person, i) => 
-        <PlainText text={person.name} key={i} />
+        <PlainText text={`${person.name} ${person.number}`} key={i} />
       )}
     </div>
   )
