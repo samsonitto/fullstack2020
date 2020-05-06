@@ -14,9 +14,15 @@ const App = () => {
     let newObject = {
       name: newName
     }
-    setPersons(persons.concat(newObject))
-    setNewName('')
-    document.getElementById('nameInput0').value = ''
+
+    if(persons.some(person => person.name === newName)) {
+      alert(`${newName} is already in the phonebook`)
+    } else {
+      setPersons(persons.concat(newObject))
+      setNewName('')
+      document.getElementById('nameInput0').value = ''
+    }
+    
   }
 
   const handleAddOnChange = (e) => {
