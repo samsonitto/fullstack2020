@@ -2,15 +2,19 @@ import React, { useState } from 'react'
 import Button from './components/Button'
 import Input from './components/Input'
 import PlainText from './components/PlainText'
+import Header from './components/Header'
+import Header2 from './components/Header2'
 
 const App = () => {
   const [ persons, setPersons] = useState([
-    { name: 'Arto Hellas',
-      number: '040000000'
-    }
+    { name: 'Arto Hellas', number: '040-123456' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' }
   ]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
+  const [ personsToShow, setPersonsToShow] = useState(persons)
 
   const handleAddClick = (e) => {
     e.preventDefault()
@@ -36,6 +40,11 @@ const App = () => {
     }
   }
 
+  const handleFilterOnChange = (e) => {
+    const filtered = persons.filter(person => person.name.toLowerCase().includes(e.target.value.toLowerCase()))
+    setPersonsToShow(filtered)
+  }
+
   const handleAddOnChange = (e) => {
     setNewName(e.target.value)
   }
@@ -46,7 +55,11 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <Header text={'Phonebook'} />
+      <div>
+        Filter by Name: <Input placeholder={'Name..'} handleOnChange={handleFilterOnChange} />
+      </div>
+      <Header2 text={'Add New Contact'} />
       <form>
         <div>
           Name: <Input placeholder={'Name..'} handleOnChange={handleAddOnChange} id={'nameInput0'} /><br />
@@ -57,7 +70,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map((person, i) => 
+      {personsToShow.map((person, i) => 
         <PlainText text={`${person.name} ${person.number}`} key={i} />
       )}
     </div>
