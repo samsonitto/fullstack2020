@@ -9,7 +9,7 @@ const Button = (props) => {
   )
 }
 
-const JustText = (props) => <p>{props.text} {props.amount}</p>
+const StatisticLine = (props) => <td>{props.text}</td>
 
 const Header = (props) => <h1>{props.text}</h1>
 
@@ -21,19 +21,38 @@ const Stats = (props) => {
   }
 
   return (
-    <>
-      <JustText text={props.texts[0]} amount={props.goodAmount}/>
-      <JustText text={props.texts[1]} amount={props.neutralAmount}/>
-      <JustText text={props.texts[2]} amount={props.badAmount}/>
-      <JustText text={props.texts[3]} amount={props.all}/>
-      <JustText text={props.texts[4]} amount={props.avg}/>
-      <JustText text={props.texts[5]} amount={props.percentage}/>
-    </>
+    <table>
+      <tbody>
+        <tr>
+          <StatisticLine text={props.texts[0]} />
+          <StatisticLine text={props.goodAmount} />
+        </tr>
+        <tr>
+          <StatisticLine text={props.texts[1]} />
+          <StatisticLine text={props.neutralAmount} />
+        </tr>
+        <tr>
+          <StatisticLine text={props.texts[2]} />
+          <StatisticLine text={props.badAmount} />
+        </tr>
+        <tr>
+          <StatisticLine text={props.texts[3]} />
+          <StatisticLine text={props.all} />
+        </tr>
+        <tr>
+          <StatisticLine text={props.texts[4]} />
+          <StatisticLine text={props.avg} />
+        </tr>
+        <tr>
+          <StatisticLine text={props.texts[5]} />
+          <StatisticLine text={props.percentage} />
+        </tr>
+      </tbody>
+    </table>
   )
 }
 
 const App = () => {
-  // tallenna napit omaan tilaansa
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
