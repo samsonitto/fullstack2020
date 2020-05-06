@@ -3,9 +3,11 @@ import ReactDOM from 'react-dom'
 
 const Header = (props) => {
   return (
-    <h1>{props.course.name}</h1>
+    <h1>{props.text}</h1>
   )
 }
+
+const Header2 = (props) => <h2>{props.course.name}</h2>
 
 const Part = (props) => {
   return(
@@ -36,7 +38,7 @@ const Total = (props) => {
 const Course = (props) => {
   return (
     <>
-      <Header course={props.course} />
+      <Header2 course={props.course} />
       <Content
         course={props.course}
       />
@@ -48,38 +50,59 @@ const Course = (props) => {
 }
 
 const App = () => {
-  const course = {
-    name: 'Half Stack application development',
-    id: 1,
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10,
-        id: 1
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7,
-        id: 2
-      },
-      {
-        name: 'State of a component',
-        exercises: 14,
-        id: 3
-      },
-      {
-        name: 'Redux',
-        exercises: 11,
-        id: 4
-      }
-    ]
-  }
+  const courses = [
+    {
+      name: 'Half Stack application development',
+      id: 1,
+      parts: [
+        {
+          name: 'Fundamentals of React',
+          exercises: 10,
+          id: 1
+        },
+        {
+          name: 'Using props to pass data',
+          exercises: 7,
+          id: 2
+        },
+        {
+          name: 'State of a component',
+          exercises: 14,
+          id: 3
+        },
+        {
+          name: 'Redux',
+          exercises: 11,
+          id: 4
+        }
+      ]
+    }, 
+    {
+      name: 'Node.js',
+      id: 2,
+      parts: [
+        {
+          name: 'Routing',
+          exercises: 3,
+          id: 1
+        },
+        {
+          name: 'Middlewares',
+          exercises: 7,
+          id: 2
+        }
+      ]
+    }
+  ]
 
-  let total = course.parts.map(part => part.exercises).reduce((a, b) => a + b, 0)
+  //let total = course.parts.map(part => part.exercises).reduce((a, b) => a + b, 0)
 
   return (
     <div>
-      <Course course={course} total={total} />
+      <Header text={'Web Development Curriculum'} />
+      {courses.map(course => 
+        <Course key={course.id} course={course} total={course.parts.map(part => part.exercises).reduce((a, b) => a + b, 0)} />
+      )}
     </div>
   )
 }
