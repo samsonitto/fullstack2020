@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import Button from './components/Button'
-import Input from './components/Input'
 import PlainText from './components/PlainText'
 import Header from './components/Header'
-import Header2 from './components/Header2'
+import Filter from './components/Filter'
+import AddNewContact from './components/AddNewContact'
+import Contacts from './components/Contacts'
 
 const App = () => {
   const [ persons, setPersons] = useState([
@@ -33,6 +33,7 @@ const App = () => {
         alert(`${newName} is already in the phonebook`)
       } else {
         setPersons(persons.concat(newObject))
+        setPersonsToShow(persons.concat(newObject))
         setNewName('')
         document.getElementById('nameInput0').value = ''
         document.getElementById('numberInput0').value = ''
@@ -56,23 +57,13 @@ const App = () => {
   return (
     <div>
       <Header text={'Phonebook'} />
-      <div>
-        Filter by Name: <Input placeholder={'Name..'} handleOnChange={handleFilterOnChange} />
-      </div>
-      <Header2 text={'Add New Contact'} />
-      <form>
-        <div>
-          Name: <Input placeholder={'Name..'} handleOnChange={handleAddOnChange} id={'nameInput0'} /><br />
-          Number: <Input placeholder={'Number..'} handleOnChange={handleAddNumberOnChange} id={'numberInput0'} />
-        </div>
-        <div>
-          <Button type={'submit'} handleClick={handleAddClick} text={'Add'} />
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {personsToShow.map((person, i) => 
-        <PlainText text={`${person.name} ${person.number}`} key={i} />
-      )}
+      <Filter handleFilterOnChange={handleFilterOnChange} />
+      <AddNewContact 
+        handleAddOnChange={handleAddOnChange} 
+        handleAddNumberOnChange={handleAddNumberOnChange}
+        handleAddClick={handleAddClick}
+      />
+      <Contacts personsToShow={personsToShow} />
     </div>
   )
 }
