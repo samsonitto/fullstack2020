@@ -60,7 +60,7 @@ const App = (props) => {
 
   let voteText = points[selected] === 1 ? 'vote' : 'votes'
   let mostText = "Has " + points[max] + " votes"
-
+  
   return (
     <div>
       <Header text={'Anecdote of the Day'} />
