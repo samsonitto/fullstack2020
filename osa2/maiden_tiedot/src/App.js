@@ -3,10 +3,13 @@ import axios from 'axios'
 import Input from './components/Input'
 import CountryList from './components/CountryList'
 
+console.log('API',process.env.REACT_APP_WEATHER_API_KEY);
+
+
 const App = () => {
   const [ countries, setCountries] = useState([]) 
   const [ countriesToShow, setCountriesToShow] = useState([])
-  const [ countryInfo, setCountryInfo] = useState([])
+  const [ weather, setWeather ] = useState({})
 
   useEffect(() => {
     console.log('effect')
@@ -19,9 +22,18 @@ const App = () => {
     
   }, [])
 
+
+
   const getOneCountry = (countryName) => {
       const filtered = countries.filter(country => country.name.toLowerCase().includes(countryName.toLowerCase()))
       setCountriesToShow(filtered)
+  }
+
+  const getWeather = (capital) => {
+    const search = `http://api.weatherstack.com/current?access_key=${process.env.REACT_APP_WEATHER_API_KEY}&query=${capital}`
+    axios.get(search).then(response => {
+      setWeather(response.data)
+    })
   }
 
   const handleFilterOnChange = (e) => {
@@ -35,10 +47,13 @@ const App = () => {
     
   }
 
+  console.log(weather);
+  
+
   return (
     <div>
       Input Country <Input placeholder={"Country.."} handleOnChange={handleFilterOnChange} />
-      <CountryList countries={countriesToShow} handleOnClick={getOneCountry} />
+      <CountryList weather={weather} countries={countriesToShow} getCountryInfo={getOneCountry} />
     </div>
   )
 }
