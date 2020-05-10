@@ -51,6 +51,19 @@ const App = () => {
     }
   }
 
+  const handleDeleteClick = (id) => {
+    console.log(id);
+    let message = `Do you really want to delete this contact?`
+    if(window.confirm(message)){
+      personService
+        .deleteContact(id)
+        .then(deletedContact => {
+          setPersons(persons.filter(p => p.id !== id))
+          setPersonsToShow(persons.filter(p => p.id !== id))
+      })
+    }
+  }
+
   const handleFilterOnChange = (e) => {
     const filtered = persons.filter(person => person.name.toLowerCase().includes(e.target.value.toLowerCase()))
     setPersonsToShow(filtered)
@@ -73,7 +86,7 @@ const App = () => {
         handleAddNumberOnChange={handleAddNumberOnChange}
         handleAddClick={handleAddClick}
       />
-      <Contacts personsToShow={personsToShow} />
+      <Contacts personsToShow={personsToShow} handleDeleteClick={handleDeleteClick} />
     </div>
   )
 }
