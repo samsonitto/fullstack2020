@@ -3,7 +3,7 @@ import Header from './components/Header'
 import Filter from './components/Filter'
 import AddNewContact from './components/AddNewContact'
 import Contacts from './components/Contacts'
-import axios from 'axios'
+import personService from './services/persons'
 
 const App = () => {
   const [ persons, setPersons] = useState([]) 
@@ -13,17 +13,14 @@ const App = () => {
   const [ dataLoaded, setDataLoaded ] = useState(false)
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
-        setPersonsToShow(response.data)
+    personService
+      .getAll()
+      .then(initialContacts => {
+        setPersons(initialContacts)
+        setPersonsToShow(initialContacts)
       })
     
   }, [])
-  console.log('render', persons.length, 'persons');
   
 
   const handleAddClick = (e) => {
@@ -42,11 +39,14 @@ const App = () => {
       if(persons.some(person => person.name === newName)) {
         alert(`${newName} is already in the phonebook`)
       } else {
-        setPersons(persons.concat(newObject))
-        setPersonsToShow(persons.concat(newObject))
-        setNewName('')
-        document.getElementById('nameInput0').value = ''
-        document.getElementById('numberInput0').value = ''
+        personService
+          .create(newObject)
+          .then(returnedContact => {
+            setPersons(persons.concat(returnedContact))
+            setPersonsToShow(persons.concat(returnedContact))
+            setNewName('')
+            setNewNumber('')
+          })
       }
     }
   }

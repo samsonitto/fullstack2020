@@ -2,10 +2,8 @@ import React, { useState } from 'react'
 import TextLine from './TextLine'
 import CountryInfo from './CountryInfo'
 import Button from './Button'
-import axios from 'axios'
 
 const CountryList = (props) => {
-    const [weather, setWeather] = useState({})
 
     const handleOnClick = (countryName) => {
         props.getCountryInfo(countryName);
@@ -18,7 +16,7 @@ const CountryList = (props) => {
     }
     else if (props.countries.length === 1) {        
         return (
-            <CountryInfo weather={weather} countries={props.countries} />
+            <CountryInfo weather={props.weather} countries={props.countries} />
         )
     }
     return (

@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import Header from './Header'
 import TextLine from './TextLine'
-import axios from 'axios'
 import Weather from './Weather'
 
 const CountryInfo = (props) => {

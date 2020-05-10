@@ -29,13 +29,6 @@ const App = () => {
       setCountriesToShow(filtered)
   }
 
-  const getWeather = (capital) => {
-    const search = `http://api.weatherstack.com/current?access_key=${process.env.REACT_APP_WEATHER_API_KEY}&query=${capital}`
-    axios.get(search).then(response => {
-      setWeather(response.data)
-    })
-  }
-
   const handleFilterOnChange = (e) => {
     if(e.target.value) {
       const filtered = countries.filter(country => country.name.toLowerCase().includes(e.target.value.toLowerCase()))

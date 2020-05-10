@@ -5,7 +5,6 @@ import axios from 'axios'
 
 const Weather = (props) => {
     const [weather, setWeather] = useState({})
-    const [weatherLoaded, setWeatherLoaded] = useState(false)
 
     useEffect(() => {
         console.log('effect')
@@ -15,7 +14,6 @@ const Weather = (props) => {
           .get(search)
           .then(response => {
             console.log('promise fulfilled')
-            setWeatherLoaded(true)
             setWeather(response.data)
             console.log(response.data.current.temperature);
             
