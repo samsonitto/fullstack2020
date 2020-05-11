@@ -4,12 +4,16 @@ import Filter from './components/Filter'
 import AddNewContact from './components/AddNewContact'
 import Contacts from './components/Contacts'
 import personService from './services/persons'
+import Notification from './components/Notification'
+import './index.css'
 
 const App = () => {
   const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ personsToShow, setPersonsToShow] = useState(persons)
+  const [ message, setMessage] = useState(null)
+  const [ notClass, setNotClass] = useState(null)
 
   useEffect(() => {
     personService
@@ -19,7 +23,7 @@ const App = () => {
         setPersonsToShow(initialContacts)
       })
       .catch(error => {
-        alert(`Error caught: ${error}`)
+        showMessage(`Error caught: ${error}`, 'error')
       })
     
   }, [])
@@ -37,22 +41,28 @@ const App = () => {
         name: newName,
         number: newNumber
       }
-  
       if(persons.some(person => person.name === newName)) {
         let message = `${newName} is already in the phonebook. Do you want to replace the old number with a new one?`
         if(window.confirm(message)) {
           const per = persons.find(p => p.name === newName)
           const changedContact = { ...per, number: newNumber}
-
+          
           personService
             .update(per.id, changedContact)
             .then(returnedContact => {
               setPersons(persons.map(person => person.id !== per.id ? person : returnedContact))
               setPersonsToShow(persons.map(person => person.id !== per.id ? person : returnedContact))
               resetForm()
+              showMessage(`Updated ${newName}`, 'success')
             })
             .catch(error => {
-              alert(`Error caught: ${error}`)
+              console.log(error);
+              console.log(per.id);
+              
+              setPersons(persons.filter(p => p.id !== per.id))
+              setPersonsToShow(persons.filter(p => p.id !== per.id))
+              showMessage(`${newName} has already been removed from the server`, 'error')
+              
             })
         }
       } else {
@@ -61,18 +71,17 @@ const App = () => {
           .then(returnedContact => {
             setPersons(persons.concat(returnedContact))
             setPersonsToShow(persons.concat(returnedContact))
-            
             resetForm()
+            showMessage(`Added ${newName}`, 'success')
           })
           .catch(error => {
-            alert(`Error caught: ${error}`)
+            showMessage(`Error caught: ${error}`, 'error')
           })
       }
     }
   }
 
   const handleDeleteClick = (id, name) => {
-    console.log(id);
     let message = `Do you really want to delete ${name}?`
     if(window.confirm(message)){
       personService
@@ -82,7 +91,7 @@ const App = () => {
           setPersonsToShow(persons.filter(p => p.id !== id))
         })
         .catch(error => {
-          alert(`Error caught: ${error}`)
+          showMessage(`${name} has already been removed from the server`, 'error')
         })
     }
   }
@@ -92,6 +101,15 @@ const App = () => {
     setNewNumber('')
     document.getElementById('nameInput0').value = ''
     document.getElementById('numberInput0').value = ''
+  }
+
+  const showMessage = (msg, msgClass) => {
+    setMessage(msg)
+    setNotClass(msgClass)
+    setTimeout(() => {
+      setMessage(null)
+      setNotClass(null)
+    }, 5000)
   }
 
   const handleFilterOnChange = (e) => {
@@ -110,6 +128,7 @@ const App = () => {
   return (
     <div>
       <Header text={'Phonebook'} />
+      <Notification message={message} notClassName={notClass} />
       <Filter handleFilterOnChange={handleFilterOnChange} />
       <AddNewContact 
         handleAddOnChange={handleAddOnChange} 
