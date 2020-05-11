@@ -10,7 +10,7 @@
 | --- | :---------------: |
 | 0   |        3.5        |
 | 1   |         6         |
-| 2   |        8.5        |
+| 2   |       10.5        |
 
 ## Cheatsheet
 
@@ -19,3 +19,4 @@
 * package.json -> scripts ->
   * ```"server": "json-server -p3001 --watch db.json"```
 * set "REACT_APP_NOT_SECRET_CODE=abcdef" && npm start
+* npm run json-server

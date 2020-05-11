@@ -10,7 +10,6 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ personsToShow, setPersonsToShow] = useState(persons)
-  const [ dataLoaded, setDataLoaded ] = useState(false)
 
   useEffect(() => {
     personService
@@ -18,6 +17,9 @@ const App = () => {
       .then(initialContacts => {
         setPersons(initialContacts)
         setPersonsToShow(initialContacts)
+      })
+      .catch(error => {
+        alert(`Error caught: ${error}`)
       })
     
   }, [])
@@ -37,31 +39,59 @@ const App = () => {
       }
   
       if(persons.some(person => person.name === newName)) {
-        alert(`${newName} is already in the phonebook`)
+        let message = `${newName} is already in the phonebook. Do you want to replace the old number with a new one?`
+        if(window.confirm(message)) {
+          const per = persons.find(p => p.name === newName)
+          const changedContact = { ...per, number: newNumber}
+
+          personService
+            .update(per.id, changedContact)
+            .then(returnedContact => {
+              setPersons(persons.map(person => person.id !== per.id ? person : returnedContact))
+              setPersonsToShow(persons.map(person => person.id !== per.id ? person : returnedContact))
+              resetForm()
+            })
+            .catch(error => {
+              alert(`Error caught: ${error}`)
+            })
+        }
       } else {
         personService
           .create(newObject)
           .then(returnedContact => {
             setPersons(persons.concat(returnedContact))
             setPersonsToShow(persons.concat(returnedContact))
-            setNewName('')
-            setNewNumber('')
+            
+            resetForm()
+          })
+          .catch(error => {
+            alert(`Error caught: ${error}`)
           })
       }
     }
   }
 
-  const handleDeleteClick = (id) => {
+  const handleDeleteClick = (id, name) => {
     console.log(id);
-    let message = `Do you really want to delete this contact?`
+    let message = `Do you really want to delete ${name}?`
     if(window.confirm(message)){
       personService
         .deleteContact(id)
-        .then(deletedContact => {
+        .then(res => {
           setPersons(persons.filter(p => p.id !== id))
           setPersonsToShow(persons.filter(p => p.id !== id))
-      })
+        })
+        .catch(error => {
+          alert(`Error caught: ${error}`)
+        })
     }
+  }
+
+  const resetForm = () => {
+    setNewName('')
+    setNewNumber('')
+    document.getElementById('nameInput0').value = ''
+    document.getElementById('numberInput0').value = ''
   }
 
   const handleFilterOnChange = (e) => {
