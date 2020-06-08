@@ -8,8 +8,10 @@ const Notification = () => {
     padding: 10,
     borderWidth: 1
   }
+  console.log(notification === '' ? 'true' : 'false')
+  
   return (
-    <div style={style}>
+    <div style={notification === '' ? undefined : style}>
       {notification}
     </div>
   )

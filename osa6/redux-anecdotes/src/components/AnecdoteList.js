@@ -5,7 +5,6 @@ import Anecdote from './Anecdote'
 import Notification from './Notification'
 
 const Anecdotes = () => {
-  const dispatch = useDispatch()
   const anecdotes = useSelector(state => state.anecdotes)
   console.log(anecdotes)
 
