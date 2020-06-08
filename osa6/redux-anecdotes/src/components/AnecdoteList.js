@@ -1,12 +1,11 @@
 /* eslint-disable */
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import Anecdote from './Anecdote'
 import Notification from './Notification'
 
 const Anecdotes = () => {
-  const anecdotes = useSelector(state => state.anecdotes)
-  console.log(anecdotes)
+  const anecdotes = useSelector(state => state.anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(state.filter.toLowerCase())))
 
   return (
     <>
