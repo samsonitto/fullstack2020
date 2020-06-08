@@ -66,6 +66,8 @@ const App = () => {
             })
         }
       } else {
+        console.log('step0');
+        
         personService
           .create(newObject)
           .then(returnedContact => {
@@ -75,7 +77,8 @@ const App = () => {
             showMessage(`Added ${newName}`, 'success')
           })
           .catch(error => {
-            showMessage(`Error caught: ${error}`, 'error')
+            console.log(error.response.data)
+            showMessage(`${error.response.data.error}`, 'error')
           })
       }
     }
