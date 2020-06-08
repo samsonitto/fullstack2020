@@ -1,4 +1,4 @@
-const anecdotesAtStart = [
+/* const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
   'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
@@ -15,15 +15,15 @@ const asObject = (anecdote) => {
     id: getId(),
     votes: 0
   }
-}
+} */
 
 const sortedState = (state) => {
   return state.sort((a, b) => (a.votes < b.votes ? 1 : -1))
 }
 
-const initialState = sortedState(anecdotesAtStart.map(asObject))
+//const initialState = sortedState(anecdotesAtStart.map(asObject))
 
-const reducer = (state = initialState, action) => {
+const reducer = (state = [], action) => {
   console.log('state now: ', state)
   console.log('action', action)
   switch (action.type) {
@@ -37,11 +37,19 @@ const reducer = (state = initialState, action) => {
       return sortedState(state.map(a => a.id !== id ? a : changedAnecdote))
 
     case 'NEW':
-      const newAnecdote = asObject(action.data.content)
-      return sortedState(state.concat(newAnecdote))
-  
+      return sortedState([...state, action.data])
+      
+    case 'INIT_ANECDOTES':
+      return action.data
     default:
       return state;
+  }
+}
+
+export const initializeAnecdotes = (anecdotes) => {
+  return {
+    type: 'INIT_ANECDOTES',
+    data: anecdotes
   }
 }
 
