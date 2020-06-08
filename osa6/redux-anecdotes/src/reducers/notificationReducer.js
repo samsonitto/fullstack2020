@@ -7,6 +7,8 @@ const notificationReducer = (state = '', action) => {
   }
 }
 
+let timer
+
 export const notificationChange = (notification, time) => {
   return async dispatch => {
     await dispatch({
@@ -14,10 +16,13 @@ export const notificationChange = (notification, time) => {
       notification,
     })
 
-    setTimeout(() => {
+    clearTimeout(timer)
+
+    timer = setTimeout(() => {
       dispatch({
         type: 'NOTIFICATION',
-        notification: ''
+        notification: '',
+        timeout: true
       })
     }, time * 1000)
     
