@@ -1,7 +1,16 @@
 /* eslint-disable */
 import React from 'react'
+import { useDispatch } from 'react-redux'
+import { voteFor } from '../reducers/anecdoteReducer'
+import { notificationChange } from "../reducers/notificationReducer"
 
-const Anecdote = ({ anecdote, handleClick }) => {
+const Anecdote = ({ anecdote }) => {
+  const dispatch = useDispatch()
+
+  const handleClick = () => {
+    dispatch(voteFor(anecdote.id))
+    dispatch(notificationChange(`You voted for ${anecdote.content}`))
+  }
 
   return (
     <div>
