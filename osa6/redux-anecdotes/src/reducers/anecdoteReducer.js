@@ -4,8 +4,6 @@ const sortedState = (state) => {
   return state.sort((a, b) => (a.votes < b.votes ? 1 : -1))
 }
 
-//const initialState = sortedState(anecdotesAtStart.map(asObject))
-
 const reducer = (state = [], action) => {
   console.log('state now: ', state)
   console.log('action', action)
@@ -13,11 +11,7 @@ const reducer = (state = [], action) => {
     case 'VOTE':
       const id = action.data.id
       const anecdoteToVote = state.find(a => a.id === id)
-      const changedAnecdote = {
-        ...anecdoteToVote,
-        votes: anecdoteToVote.votes += 1
-      }
-      return sortedState(state.map(a => a.id !== id ? a : changedAnecdote))
+      return sortedState(state.map(a => a.id !== id ? a : anecdoteToVote))
 
     case 'NEW':
       return sortedState([...state, action.data])
@@ -34,7 +28,7 @@ export const initializeAnecdotes = () => {
     const anecdotes = await anecdoteService.getAll()
     dispatch({
       type: 'INIT_ANECDOTES',
-      data: anecdotes
+      data: sortedState(anecdotes)
     })
   }
 }
@@ -50,10 +44,14 @@ export const addAnecdote = (content) => {
   }
 }
 
-export const voteFor = (id) => {
-  return {
-    type: 'VOTE',
-    data: { id }
+export const voteFor = (anecdote) => {
+  return async dispatch => {
+    const updatedAnecdote = await anecdoteService.vote(anecdote)
+    dispatch({
+      type: 'VOTE',
+      data: updatedAnecdote
+    })
+    
   }
 }
 
