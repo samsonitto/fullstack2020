@@ -53,10 +53,10 @@ export const initializeAnecdotes = (anecdotes) => {
   }
 }
 
-export const addAnecdote = (content) => {
+export const addAnecdote = (data) => {
   return {
     type: 'NEW',
-    data: { content: content }
+    data,
   }
 }
 
