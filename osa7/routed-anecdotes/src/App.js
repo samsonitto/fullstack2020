@@ -64,17 +64,18 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-/*   const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('') */
 
-  const content = useField('text')
-  const author = useField('text')
-  const info = useField('text')
-
-  console.log('content', content);
+  const c = useField('text')
+  const { reset: resetContent, ...contentRest } = c
+  const content = contentRest
   
+  const a = useField('text')
+  const { reset: resetAuthor, ...authorRest } = a
+  const author = authorRest
 
+  const i = useField('text')
+  const { reset: resetInfo, ...infoRest } = i
+  const info = infoRest
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -88,9 +89,9 @@ const CreateNew = (props) => {
 
   const resetForm = (e) => {
     e.preventDefault()
-    content.reset()
-    author.reset()
-    info.reset()
+    resetContent()
+    resetAuthor()
+    resetInfo()
   }
 
   return (
