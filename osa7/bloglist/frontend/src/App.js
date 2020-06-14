@@ -14,14 +14,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { notificationChange } from "./reducers/notificationReducer"
 import { filterChange } from './reducers/filterReducer'
 import { addBlog, likeBlog, initializeBlogs, deleteBlog } from './reducers/blogReducer'
-import { loginChange } from './reducers/loginReduser';
+import { loggedIn, loginChange, logout } from './reducers/loginReduser';
 
 
 
 const App = () => {
   const [ username, setUsername ] = useState('')
   const [ password, setPassword ] = useState('')
-  const [ user, setUser ] = useState(null)
+  //const [ user, setUser ] = useState(null)
 
   const dispatch = useDispatch()
 
@@ -33,21 +33,15 @@ const App = () => {
   console.log('blogs', blogs)
   
   useEffect(() => {
-    dispatch(loginChange())
+    dispatch(loggedIn())
   }, [])
 
+  const user = useSelector(state => state.loggedUser)
 
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      const user = await loginService.login({
-        username, password,
-      })
-
-      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
-
-      blogService.setToken(user.token)
-      setUser(user)
+      dispatch(loginChange(username, password))
       setUsername('')
       setPassword('')
     } catch (error) {
@@ -56,9 +50,7 @@ const App = () => {
   }
 
   const handleLogout = () => {
-    console.log('logging out')
-    setUser(null)
-    window.localStorage.clear()
+    dispatch(logout())
   }
   
 
