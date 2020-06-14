@@ -10,32 +10,29 @@ import LoginForm from './components/LoginForm'
 import loginService from './services/login'
 import './App.css'
 import Togglable from './components/Togglable'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { notificationChange } from "./reducers/notificationReducer"
+import { initializeBlogs } from './reducers/blogReducer'
+import { filterChange } from './reducers/filterReducer'
+import { addBlog } from './reducers/blogReducer'
 
 
 
 const App = () => {
-  const [ blogs, setBlogs] = useState([])
   const [ newLike, setNewLike ] = useState('')
-  const [ blogsToShow, setBlogsToShow] = useState(blogs.sort((a, b) => (a.likes < b.likes ? 1 : -1)))
   const [ username, setUsername ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ user, setUser ] = useState(null)
 
+  const dispatch = useDispatch()
+
   useEffect(() => {
-    blogService
-      .getAll()
-      .then(initialBlogs => {
-        setBlogs(initialBlogs)
-        console.log(initialBlogs)
-        setBlogsToShow(initialBlogs)
-      })
-      .catch(error => {
-        showMessage(`Error caught: ${error}`, 'error')
-      })
-    
+    dispatch(initializeBlogs())
   }, [])
+
+  const blogs = useSelector(state => state.blogs.filter(blog => blog.title.toLowerCase().includes(state.filter.toLowerCase())))
+  console.log('blogs', blogs)
+  
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -48,7 +45,6 @@ const App = () => {
     }
   }, [])
 
-  const dispatch = useDispatch()
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -78,10 +74,8 @@ const App = () => {
   const handleAddClick = async (blogObject) => {
     try {
       blogFormRef.current.toggleVisibility()
-      const newBlog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(newBlog.savedBlog))
-      setBlogsToShow(blogs.concat(newBlog.savedBlog))
-      showMessage(`Added ${newBlog.savedBlog.title}`, 'success')
+      dispatch(addBlog(blogObject))
+      showMessage(`Added ${blogObject.title}`, 'success')
       resetForm()
       
     } catch (error) {
@@ -96,8 +90,6 @@ const App = () => {
       try {
         const deletedBlog = await blogService.deleteBlog(id)
         
-        setBlogs(blogs.filter(b => b.id !== id))
-        setBlogsToShow(blogs.filter(b => b.id !== id))
         showMessage(`The "${title}" blog has beed deleted`, 'neutral')
       } catch (error) {
         showMessage(error, 'error')
@@ -120,7 +112,6 @@ const App = () => {
     blogService
       .update(updatedObject, blog.id)
       .then(() => {
-        setBlogs(blogs)
         showMessage(`You liked ${updatedObject.title}`, 'success')
       })
       .catch(error => {
@@ -140,8 +131,7 @@ const App = () => {
   }
 
   const handleFilterOnChange = (e) => {
-    const filtered = blogs.filter(blog => blog.title.toLowerCase().includes(e.target.value.toLowerCase()))
-    setBlogsToShow(filtered)
+    dispatch(filterChange(e.target.value))
   }
 
   const blogFormRef = React.createRef()
@@ -177,7 +167,7 @@ const App = () => {
       </Togglable>
       <Filter handleFilterOnChange={handleFilterOnChange} />
     
-      <Blogs blogs={blogsToShow} handleDeleteClick={handleDeleteClick} handleLikeClick={handleLikeClick} user={user} />      
+      <Blogs blogs={blogs} handleDeleteClick={handleDeleteClick} handleLikeClick={handleLikeClick} user={user} />      
     </div>
   )
 }

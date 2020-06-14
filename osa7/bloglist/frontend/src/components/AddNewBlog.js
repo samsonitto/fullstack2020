@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import Input from './Input';
-import Button from './Button';
-import Header2 from './Header2';
+import React, { useState } from "react"
+import Input from './Input'
+import Button from './Button'
+import Header2 from './Header2'
 
 const AddNewBlog = ({ createBlog, showMessage }) => {
   const [ newTitle, setNewTitle ] = useState('')
@@ -31,6 +31,11 @@ const AddNewBlog = ({ createBlog, showMessage }) => {
     else if (newUrl === '') {
       showMessage('Input url', 'error')
     } else {
+      const newBlog = {
+        title: newTitle,
+        author: newAuthor,
+        url: newUrl,
+      }
       createBlog({
         title: newTitle,
         author: newAuthor,

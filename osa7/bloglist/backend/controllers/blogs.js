@@ -20,7 +20,7 @@ blogRouter.get('/:id', async (request, response) => {
 blogRouter.post('/', async (request, response) => {
   const { body } = request
 
-  console.log(body)
+  console.log('new blog', body)
   
 
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
