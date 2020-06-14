@@ -1,0 +1,4 @@
+{
+  "supportFile": "cypress/support/index.js",
+  "baseUrl": "http://localhost:3003"
+}

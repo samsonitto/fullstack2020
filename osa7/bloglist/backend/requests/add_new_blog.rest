@@ -1,0 +1,11 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5paW5hIiwiaWQiOiI1ZWNiOGZjZDc5MTdhYjgyNTRmZDA1NTAiLCJpYXQiOjE1OTAzOTk0ODZ9.mAJeMS3HM4zkw7dXmUh-UGLub4mzzXx60-5UneQ-hFM
+
+{
+    "title": "Olen Samson",
+    "author": "Niina Mattola",
+    "url": "https://codesamson.com",
+    "likes": "99",
+    "userId": "5ecb8fcd7917ab8254fd0550"
+}
