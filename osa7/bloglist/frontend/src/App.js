@@ -12,9 +12,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { notificationChange } from "./reducers/notificationReducer"
 import { filterChange } from './reducers/filterReducer'
 import { addBlog, likeBlog, initializeBlogs, deleteBlog } from './reducers/blogReducer'
-import { loggedIn, loginChange, logout } from './reducers/loginReduser';
+import { loggedIn, loginChange, logout } from './reducers/loginReduser'
 import Users from './components/Users'
-import { initializeUsers } from './reducers/userReducer';
+import { initializeUsers } from './reducers/userReducer'
+import { Switch, Route, Link, useRouteMatch } from 'react-router-dom'
+import UserInfo from './components/UserInfo'
 
 
 
@@ -39,6 +41,12 @@ const App = () => {
   const blogs = useSelector(state => state.blogs.filter(blog => blog.title.toLowerCase().includes(state.filter.toLowerCase())))
 
   const user = useSelector(state => state.loggedUser)
+  const users = useSelector(state => state.users)
+
+  const match = useRouteMatch('/:id')
+
+  const userInfo = match ? users.find(user => user.id === match.params.id) : null
+  console.log(userInfo);
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -146,10 +154,19 @@ const App = () => {
           showMessage={showMessage}
         />
       </Togglable>
-      <Users />
+      <Switch>
+        <Route path="/:id">
+          <UserInfo user={userInfo} />
+        </Route>
+        <Route path="/">
+          <Users />
+        </Route>
+      </Switch>
       <Filter handleFilterOnChange={handleFilterOnChange} />
     
-      <Blogs blogs={blogs} handleDeleteClick={handleDeleteClick} handleLikeClick={handleLikeClick} user={user} />      
+      <Blogs blogs={blogs} handleDeleteClick={handleDeleteClick} handleLikeClick={handleLikeClick} user={user} />
+
+      
     </div>
   )
 }

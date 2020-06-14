@@ -5,6 +5,7 @@ import User from './User'
 
 const Users = () => {
   const users = useSelector(state => state.users)
+
   return (
     <div>
       <Header2 text="Users" />
