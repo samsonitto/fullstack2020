@@ -4,40 +4,22 @@ const uniqueValidator = require('mongoose-unique-validator')
 mongoose.set('useFindAndModify', false)
 mongoose.set('useCreateIndex', true)
 
-const blogSchema = new mongoose.Schema({
-  title: {
+const commentSchema = new mongoose.Schema({
+  comment: {
     type: String,
     required: true,
     minlength: 3,
-  },
-  author: {
-    type: String,
-    required: true,
-    minlength: 3,
-  },
-  url: {
-    type: String,
-    required: true,
-  },
-  likes: {
-    type: Number,
   },
   date: { type: Date, required: true },
-  user: {
+  blog: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'Blog'
   },
-  comments: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Comment'
-    },
-  ],
 })
 
-blogSchema.plugin(uniqueValidator)
+commentSchema.plugin(uniqueValidator)
 
-blogSchema.set('toJSON', {
+commentSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
@@ -45,4 +27,4 @@ blogSchema.set('toJSON', {
   },
 })
 
-module.exports = mongoose.model('Blog', blogSchema)
+module.exports = mongoose.model('Comment', commentSchema)

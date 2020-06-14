@@ -6,7 +6,7 @@ const User = require('../models/user')
 
 // GET ALL BLOGS
 blogRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 }).populate('comments')
   response.json(blogs.map(u => u.toJSON()))
 })
 
@@ -81,6 +81,8 @@ blogRouter.delete('/:id', async (request, response) => {
   response.status(204).end()
 })
 
+
+// UPDATE BLOG
 blogRouter.put('/:id', async (request, response) => {
   const blog = {
     ...request.body,

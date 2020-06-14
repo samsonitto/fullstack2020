@@ -9,6 +9,7 @@ const app = express()
 const blogRouter = require('./controllers/blogs')
 const userRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
+const commentRouter = require('./controllers/comments')
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 
@@ -33,6 +34,7 @@ app.use(middleware.tokenExtractor)
 app.use('/api/blogs', blogRouter)
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
+app.use('/api/comments', commentRouter)
 
 logger.info('env', process.env.NODE_ENV)
 
