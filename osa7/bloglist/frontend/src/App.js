@@ -17,6 +17,7 @@ import Users from './components/Users'
 import { initializeUsers } from './reducers/userReducer'
 import { Switch, Route, Link, useRouteMatch } from 'react-router-dom'
 import UserInfo from './components/UserInfo'
+import BlogInfo from './components/BlogInfo'
 
 
 
@@ -44,9 +45,8 @@ const App = () => {
   const users = useSelector(state => state.users)
 
   const match = useRouteMatch('/:id')
-
+  
   const userInfo = match ? users.find(user => user.id === match.params.id) : null
-  console.log(userInfo);
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -154,19 +154,18 @@ const App = () => {
           showMessage={showMessage}
         />
       </Togglable>
-      <Switch>
+      
+{/*       <Switch>
         <Route path="/:id">
           <UserInfo user={userInfo} />
         </Route>
         <Route path="/">
           <Users />
         </Route>
-      </Switch>
-      <Filter handleFilterOnChange={handleFilterOnChange} />
-    
-      <Blogs blogs={blogs} handleDeleteClick={handleDeleteClick} handleLikeClick={handleLikeClick} user={user} />
+      </Switch> */}
 
-      
+      <Blogs blogs={blogs} handleDeleteClick={handleDeleteClick} handleLikeClick={handleLikeClick} user={user} handleFilterOnChange={handleFilterOnChange} />
+            
     </div>
   )
 }
