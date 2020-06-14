@@ -31,3 +31,12 @@ table, th, td {
   padding: 10px;
   margin-bottom: 10px;
 }
+
+.navbar {
+  background: lightgray;
+  padding: 5px
+}
+
+.navbarLink {
+  padding: 5px
+}

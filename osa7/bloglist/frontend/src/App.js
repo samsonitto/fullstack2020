@@ -18,6 +18,7 @@ import { initializeUsers } from './reducers/userReducer'
 import { Switch, Route, Link, useRouteMatch } from 'react-router-dom'
 import UserInfo from './components/UserInfo'
 import BlogInfo from './components/BlogInfo'
+import NavBar from './components/NavBar'
 
 
 
@@ -44,9 +45,12 @@ const App = () => {
   const user = useSelector(state => state.loggedUser)
   const users = useSelector(state => state.users)
 
-  const match = useRouteMatch('/:id')
+  const match = useRouteMatch('/users/:id')
   
   const userInfo = match ? users.find(user => user.id === match.params.id) : null
+
+  const matchBlog = useRouteMatch('/blogs/:id')
+  const blogInfo = matchBlog ? blogs.find(blog => blog.id === matchBlog.params.id) : null
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -128,7 +132,7 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-        <Header text={'Bloglist'} />
+        <Header text={'Blog App'} />
         <Notification />
         <Togglable buttonLabel={'Login'} buttonHideLabel={'Cancel'}>
           <LoginForm 
@@ -145,27 +149,33 @@ const App = () => {
 
   return (
     <div>
-      <Header text={'Bloglist'} />
+      <NavBar user={user} handleLogout={handleLogout} />
+      <Header text={'Blog App'} />
       <Notification />
-      <p>{user.name} logged in</p><Button text={"logout"} handleClick={handleLogout} />
-      <Togglable buttonLabel={'New Blog'} ref={blogFormRef} buttonHideLabel={'Cancel'}>
-        <AddNewBlog 
-          createBlog={handleAddClick}
-          showMessage={showMessage}
-        />
-      </Togglable>
       
-{/*       <Switch>
-        <Route path="/:id">
+      <Switch>
+        <Route path="/users/:id">
           <UserInfo user={userInfo} />
         </Route>
-        <Route path="/">
+        <Route path="/users">
           <Users />
         </Route>
-      </Switch> */}
+        <Route path="/blogs/:id">
+          <BlogInfo blog={blogInfo} user={user} handleLikeClick={handleLikeClick} handleDeleteClick={handleDeleteClick} />
+        </Route>
+        <Route path="/">
+          <Blogs 
+            blogs={blogs} 
+            handleDeleteClick={handleDeleteClick} 
+            handleLikeClick={handleLikeClick} 
+            user={user} 
+            handleFilterOnChange={handleFilterOnChange} 
+            handleAddClick={handleAddClick}
+            showMessage={showMessage}
+          />
+        </Route>
+      </Switch>
 
-      <Blogs blogs={blogs} handleDeleteClick={handleDeleteClick} handleLikeClick={handleLikeClick} user={user} handleFilterOnChange={handleFilterOnChange} />
-            
     </div>
   )
 }
