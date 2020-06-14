@@ -3,11 +3,9 @@ import Header from './components/Header'
 import Filter from './components/Filter'
 import AddNewBlog from './components/AddNewBlog'
 import Blogs from './components/Blogs'
-import blogService from './services/blogs'
 import Notification from './components/Notification'
 import Button from './components/Button'
 import LoginForm from './components/LoginForm'
-import loginService from './services/login'
 import './App.css'
 import Togglable from './components/Togglable'
 import { useDispatch, useSelector } from 'react-redux'
@@ -15,26 +13,30 @@ import { notificationChange } from "./reducers/notificationReducer"
 import { filterChange } from './reducers/filterReducer'
 import { addBlog, likeBlog, initializeBlogs, deleteBlog } from './reducers/blogReducer'
 import { loggedIn, loginChange, logout } from './reducers/loginReduser';
+import Users from './components/Users'
+import { initializeUsers } from './reducers/userReducer';
 
 
 
 const App = () => {
   const [ username, setUsername ] = useState('')
   const [ password, setPassword ] = useState('')
-  //const [ user, setUser ] = useState(null)
 
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(initializeBlogs())
   }, [])
-
-  const blogs = useSelector(state => state.blogs.filter(blog => blog.title.toLowerCase().includes(state.filter.toLowerCase())))
-  console.log('blogs', blogs)
   
   useEffect(() => {
     dispatch(loggedIn())
   }, [])
+  
+  useEffect(() => {
+    dispatch(initializeUsers())
+  }, [])
+
+  const blogs = useSelector(state => state.blogs.filter(blog => blog.title.toLowerCase().includes(state.filter.toLowerCase())))
 
   const user = useSelector(state => state.loggedUser)
 
@@ -144,6 +146,7 @@ const App = () => {
           showMessage={showMessage}
         />
       </Togglable>
+      <Users />
       <Filter handleFilterOnChange={handleFilterOnChange} />
     
       <Blogs blogs={blogs} handleDeleteClick={handleDeleteClick} handleLikeClick={handleLikeClick} user={user} />      
