@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { notificationChange } from "./reducers/notificationReducer"
 import { filterChange } from './reducers/filterReducer'
 import { addBlog, likeBlog, initializeBlogs, deleteBlog } from './reducers/blogReducer'
+import { loginChange } from './reducers/loginReduser';
 
 
 
@@ -31,16 +32,8 @@ const App = () => {
   const blogs = useSelector(state => state.blogs.filter(blog => blog.title.toLowerCase().includes(state.filter.toLowerCase())))
   console.log('blogs', blogs)
   
-
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-      console.log(user)
-      
-    }
+    dispatch(loginChange())
   }, [])
 
 
