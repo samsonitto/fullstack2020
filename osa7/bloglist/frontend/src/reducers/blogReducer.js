@@ -10,14 +10,18 @@ const reducer = (state = [], action) => {
   switch (action.type) {
     case 'LIKE':
       const id = action.data.id
-      const anecdoteToVote = state.find(a => a.id === id)
-      return sortedState(state.map(a => a.id !== id ? a : anecdoteToVote))
+      const likedBlog = state.find(b => b.id === id)
+      return sortedState(state.map(b => b.id !== id ? b : likedBlog))
 
     case 'NEW':
       return sortedState([...state, action.data.savedBlog])
       
     case 'INIT_BLOGS':
       return action.data
+      
+    case 'DELETE':
+      const dletedId = action.data.id
+      return sortedState(state.filter(b => b.id !== dletedId))
     default:
       return state;
   }
@@ -43,15 +47,26 @@ export const addBlog = (content) => {
   }
 }
 
-/* export const voteFor = (anecdote) => {
+export const likeBlog = (blog, id) => {
   return async dispatch => {
-    const updatedAnecdote = await anecdoteService.vote(anecdote)
+    const updatedBlog = await blogService.update(blog, id)
     dispatch({
       type: 'LIKE',
-      data: updatedAnecdote
+      data: updatedBlog
     })
     
   }
-} */
+}
+
+export const deleteBlog = (id) => {
+  return async dispatch => {
+    const deletedBlog = await blogService.deleteBlog(id)
+    dispatch({
+      type: 'DELETE',
+      data: deletedBlog
+    })
+    
+  }
+}
 
 export default reducer

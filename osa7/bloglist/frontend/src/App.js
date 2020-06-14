@@ -12,14 +12,12 @@ import './App.css'
 import Togglable from './components/Togglable'
 import { useDispatch, useSelector } from 'react-redux'
 import { notificationChange } from "./reducers/notificationReducer"
-import { initializeBlogs } from './reducers/blogReducer'
 import { filterChange } from './reducers/filterReducer'
-import { addBlog } from './reducers/blogReducer'
+import { addBlog, likeBlog, initializeBlogs, deleteBlog } from './reducers/blogReducer'
 
 
 
 const App = () => {
-  const [ newLike, setNewLike ] = useState('')
   const [ username, setUsername ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ user, setUser ] = useState(null)
@@ -88,8 +86,7 @@ const App = () => {
     let message = `Do you really want to delete ${title}?`
     if(window.confirm(message)){
       try {
-        const deletedBlog = await blogService.deleteBlog(id)
-        
+        dispatch(deleteBlog(id))
         showMessage(`The "${title}" blog has beed deleted`, 'neutral')
       } catch (error) {
         showMessage(error, 'error')
@@ -109,18 +106,15 @@ const App = () => {
       user: blog.user ? blog.user.id : undefined,
     }    
 
-    blogService
-      .update(updatedObject, blog.id)
-      .then(() => {
-        showMessage(`You liked ${updatedObject.title}`, 'success')
-      })
-      .catch(error => {
-        showMessage(error, 'error')
-      })
+    try {
+      dispatch(likeBlog(updatedObject, blog.id))
+      showMessage(`You liked ${updatedObject.title}`, 'success')
+    } catch (error) {
+      showMessage(`Error: ${error}`, 'error')
+    }
   }
 
   const resetForm = () => {
-    setNewLike('')
     document.getElementById('titleInput0').value = ''
     document.getElementById('authorInput0').value = ''
     document.getElementById('urlInput0').value = ''
