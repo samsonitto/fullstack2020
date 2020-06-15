@@ -4,6 +4,7 @@ import Togglable from './Togglable'
 import Blog from './Blog'
 import Filter from './Filter'
 import AddNewBlog from './AddNewBlog'
+import { Table } from 'react-bootstrap'
 
 const Blogs = (props) => {
   const blogFormRef = React.createRef()
@@ -18,7 +19,7 @@ const Blogs = (props) => {
         </Togglable>
         <Filter handleFilterOnChange={props.handleFilterOnChange} />
         <Header2 text={'Blogs'} />
-        <table>
+        <Table stripped bordered hover>
           <thead>
             <tr>
               <th>Title</th>
@@ -32,7 +33,7 @@ const Blogs = (props) => {
               </>
             )}
           </tbody>
-        </table>
+        </Table>
       </>
     )
 }

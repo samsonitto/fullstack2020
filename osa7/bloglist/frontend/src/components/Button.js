@@ -1,14 +1,17 @@
-import React from 'react';
+import React from 'react'
+import { Button as Btn } from 'react-bootstrap'
 
 const Button = (props) => {
     return (
-        <button 
+        <Btn 
             onClick={props.handleClick}
             type={props.type}
             id={props.id}
+            variant={props.variant}
+            className={props.className}
         >
             {props.text}
-        </button>
+        </Btn>
     )
 }
 

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import Header from './components/Header'
-import Filter from './components/Filter'
-import AddNewBlog from './components/AddNewBlog'
 import Blogs from './components/Blogs'
 import Notification from './components/Notification'
 import Button from './components/Button'
 import LoginForm from './components/LoginForm'
-import './App.css'
+//import './App.css'
 import Togglable from './components/Togglable'
 import { useDispatch, useSelector } from 'react-redux'
 import { notificationChange } from "./reducers/notificationReducer"
@@ -59,7 +57,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (error) {
-      showMessage('wrong credentials', 'error')
+      showMessage('wrong credentials', 'danger')
     }
   }
 
@@ -70,13 +68,13 @@ const App = () => {
 
   const handleAddClick = async (blogObject) => {
     try {
-      blogFormRef.current.toggleVisibility()
+      //blogFormRef.current.toggleVisibility()
       dispatch(addBlog(blogObject))
       showMessage(`Added ${blogObject.title}`, 'success')
       resetForm()
       
     } catch (error) {
-      showMessage(error, 'error')
+      showMessage(error, 'danger')
     }
 
   }
@@ -86,9 +84,9 @@ const App = () => {
     if(window.confirm(message)){
       try {
         dispatch(deleteBlog(id))
-        showMessage(`The "${title}" blog has beed deleted`, 'neutral')
+        showMessage(`The "${title}" blog has beed deleted`, 'primary')
       } catch (error) {
-        showMessage(error, 'error')
+        showMessage(error, 'danger')
       }
     }
   }
@@ -109,7 +107,7 @@ const App = () => {
       dispatch(likeBlog(updatedObject, blog.id))
       showMessage(`You liked ${updatedObject.title}`, 'success')
     } catch (error) {
-      showMessage(`Error: ${error}`, 'error')
+      showMessage(`Error: ${error}`, 'danger')
     }
   }
 
@@ -148,40 +146,41 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div className='container mr-0 ml-0 p-0 mw-100'>
       <NavBar user={user} handleLogout={handleLogout} />
-      <Header text={'Blog App'} />
-      <Notification />
-      
-      <Switch>
-        <Route path="/users/:id">
-          <UserInfo user={userInfo} />
-        </Route>
-        <Route path="/users">
-          <Users />
-        </Route>
-        <Route path="/blogs/:id">
-          <BlogInfo 
-            blog={blogInfo} 
-            user={user} 
-            handleLikeClick={handleLikeClick} 
-            handleDeleteClick={handleDeleteClick} 
-            showMessage={showMessage} 
-          />
-        </Route>
-        <Route path="/">
-          <Blogs 
-            blogs={blogs} 
-            handleDeleteClick={handleDeleteClick} 
-            handleLikeClick={handleLikeClick} 
-            user={user} 
-            handleFilterOnChange={handleFilterOnChange} 
-            handleAddClick={handleAddClick}
-            showMessage={showMessage}
-          />
-        </Route>
-      </Switch>
-
+      <div className='col ml-10 mr-10'>
+        <Header text={'Blog App'} />
+        <Notification />
+        
+        <Switch>
+          <Route path="/users/:id">
+            <UserInfo user={userInfo} />
+          </Route>
+          <Route path="/users">
+            <Users />
+          </Route>
+          <Route path="/blogs/:id">
+            <BlogInfo 
+              blog={blogInfo} 
+              user={user} 
+              handleLikeClick={handleLikeClick} 
+              handleDeleteClick={handleDeleteClick} 
+              showMessage={showMessage} 
+            />
+          </Route>
+          <Route path="/">
+            <Blogs 
+              blogs={blogs} 
+              handleDeleteClick={handleDeleteClick} 
+              handleLikeClick={handleLikeClick} 
+              user={user} 
+              handleFilterOnChange={handleFilterOnChange} 
+              handleAddClick={handleAddClick}
+              showMessage={showMessage}
+            />
+          </Route>
+        </Switch>
+      </div>
     </div>
   )
 }

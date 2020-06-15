@@ -23,13 +23,13 @@ const AddNewBlog = ({ createBlog, showMessage }) => {
   const addBlog = (e) => {
     e.preventDefault()
     if(newTitle === '') {
-      showMessage('Input title', 'error')
+      showMessage('Input title', 'danger')
     }
     else if (newAuthor === '') {
-      showMessage('Input author', 'error')
+      showMessage('Input author', 'danger')
     }
     else if (newUrl === '') {
-      showMessage('Input url', 'error')
+      showMessage('Input url', 'danger')
     } else {
       const newBlog = {
         title: newTitle,
@@ -51,14 +51,19 @@ const AddNewBlog = ({ createBlog, showMessage }) => {
         <>
             <Header2 text={'Add New Blog'} />
             <form>
-                <div>
-                    Title: <Input placeholder={'Title..'} handleOnChange={handleAddTitleOnChange} id={'titleInput0'} /><br />
-                    Author: <Input placeholder={'Author..'} handleOnChange={handleAddAuthorOnChange} id={'authorInput0'} /><br />
-                    Url: <Input placeholder={'Url..'} handleOnChange={handleAddUrlOnChange} id={'urlInput0'} />
-                </div>
-                <div>
-                    <Button type={'submit'} handleClick={addBlog} text={'Add'} id='addNewBlogButton' />
-                </div>
+              <div className={'form-group mb-0'}>
+                <label className='mb-1'>Title</label><br />
+                <Input placeholder={'Title..'} handleOnChange={handleAddTitleOnChange} id={'titleInput0'} /><br />
+              </div>
+              <div className={'form-group'}>
+                <label className='mb-1'>Author</label><br />
+                <Input placeholder={'Author..'} handleOnChange={handleAddAuthorOnChange} id={'authorInput0'} />
+              </div>
+              <div className={'form-group'}>
+                <label className='mb-1'>URL</label><br />
+                <Input placeholder={'Url..'} handleOnChange={handleAddUrlOnChange} id={'urlInput0'} />
+              </div>
+              <Button className={'mb-3'} variant={'primary'} type={'submit'} handleClick={addBlog} text={'Add'} id='addNewBlogButton' />
             </form>
         </>
     )
