@@ -1,17 +1,24 @@
 import blogService from '../services/blogs'
+import commentService from '../services/comments'
 
 const sortedState = (state) => {
   return state.sort((a, b) => (a.likes < b.likes ? 1 : -1))
 }
 
 const reducer = (state = [], action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
   switch (action.type) {
     case 'LIKE':
       const id = action.data.id
       const likedBlog = state.find(b => b.id === id)
       return sortedState(state.map(b => b.id !== id ? b : likedBlog))
+
+    case 'COMMENT':
+      const commentedBlogId = action.data.savedComment.blog
+      let commentedBlog = state.find(b => b.id === commentedBlogId)
+      commentedBlog.comments.push(action.data.savedComment)
+      console.log('commented blog', commentedBlog)
+      
+      return sortedState(state.map(b => b.id !== commentedBlogId ? b : commentedBlog))
 
     case 'NEW':
       return sortedState([...state, action.data.savedBlog])
@@ -66,6 +73,18 @@ export const deleteBlog = (id) => {
       data: deletedBlog
     })
     
+  }
+}
+
+export const addComment = (commentObj) => {
+  return async dispatch => {
+    const newComment = await commentService.comment(commentObj)
+    console.log('newComment', newComment)
+    
+    dispatch({
+      type: 'COMMENT',
+      data: newComment
+    })
   }
 }
 

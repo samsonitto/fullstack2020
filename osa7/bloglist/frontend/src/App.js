@@ -161,7 +161,13 @@ const App = () => {
           <Users />
         </Route>
         <Route path="/blogs/:id">
-          <BlogInfo blog={blogInfo} user={user} handleLikeClick={handleLikeClick} handleDeleteClick={handleDeleteClick} />
+          <BlogInfo 
+            blog={blogInfo} 
+            user={user} 
+            handleLikeClick={handleLikeClick} 
+            handleDeleteClick={handleDeleteClick} 
+            showMessage={showMessage} 
+          />
         </Route>
         <Route path="/">
           <Blogs 
