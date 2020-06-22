@@ -70,6 +70,8 @@ const App = () => {
       <Authors
         show={page === 'authors'}
         authors={resultAuthors.data.allAuthors}
+        ALL_AUTHORS={ALL_AUTHORS}
+        setError={notify}
       />
 
       <Books
