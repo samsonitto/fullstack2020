@@ -1,7 +1,25 @@
-
-const { ApolloServer, gql } = require('apollo-server')
-
+const { ApolloServer, gql, UserInputError } = require('apollo-server')
+const mongoose = require('mongoose')
 const { v1: uuid } = require('uuid')
+const Book = require('./models/book')
+const Author = require('./models/author')
+const { findById } = require('./models/book')
+
+require('dotenv').config()
+
+let MONGODB_URI = process.env.MONGODB_URI
+
+mongoose.set('useFindAndModify', false)
+
+console.log('connecting to', MONGODB_URI)
+
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connection to MongoDB:', error.message)
+  })
 
 let authors = [
   {
@@ -90,7 +108,7 @@ const typeDefs = gql`
   type Book {
     title: String!
     published: Int!
-    author: String!
+    author: Author!
     id: ID!
     genres: [String]!
   }
@@ -126,29 +144,54 @@ const resolvers = {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: (root, args) => {
-      const filteredAuthor = args.author ? books.filter(b => b.author === args.author) : books
+      /* const filteredAuthor = args.author ? books.filter(b => b.author === args.author) : books
       const filteredGenre = args.genre ? filteredAuthor.filter(fa => fa.genres.find(g => g.toLocaleLowerCase() === args.genre.toLocaleLowerCase())) : filteredAuthor
 
-      return filteredGenre
+      return filteredGenre */
+      return Book.find({})
     },
     allAuthors: () => {
-      return authors.map(a => {
+      /* return authors.map(a => {
         return {...a, bookCount: books.filter(b => b.author === a.name).length}
-      })
+      }) */
+      return Author.find({})
     } 
   },
 
   Mutation: {
-    addBook: (root, args) => {
-      const book = { ...args, id: uuid() }
-      if (!authors.find(a => a.name === args.author)) {
-        const newAuthor = { name: args.author, id: uuid() }
-        authors = authors.concat(newAuthor)
+    addBook: async (root, args) => {
+      
+      let author = await Author.findOne({ name: args.author })
+      
+      if (author) {
+        
+        try {
+          const book = new Book({ ...args, author: author._id })
+          await book.save()
+
+          const newBook = await Book.findById(book._id).populate('author')
+
+          return newBook
+        } catch (error) {
+          throw new UserInputError(error.message, {
+            invalidArgs: args,
+          })
+        }
       }
 
-      books = books.concat(book)
+      author = new Author({ name: args.author })
+      let book = new Book({ ...args, author: author._id })
 
-      return book
+      try {
+        await book.save()
+        await author.save()
+      } catch (error) {
+        throw new UserInputError(error.message)
+      }
+
+      const newBook = await Book.findById(book._id).populate('author')      
+
+      return newBook
     },
 
     editAuthor: (root, args) => {      
