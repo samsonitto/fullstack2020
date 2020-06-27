@@ -117,6 +117,7 @@ const typeDefs = gql`
     name: String!
     born: Int
     bookCount: Int!
+    books: [Book]!
     id: ID!
   }
 
@@ -141,8 +142,8 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
+    bookCount: () => Book.collection.countDocuments(),
+    authorCount: () => Author.collection.countDocuments(),
     allBooks: (root, args) => {
       /* const filteredAuthor = args.author ? books.filter(b => b.author === args.author) : books
       const filteredGenre = args.genre ? filteredAuthor.filter(fa => fa.genres.find(g => g.toLocaleLowerCase() === args.genre.toLocaleLowerCase())) : filteredAuthor
@@ -189,9 +190,11 @@ const resolvers = {
       try {
         await book.save()
 
-        author = author.books.concat(book._id)
+        author.books = author.books.concat(book._id)
         await author.save()
       } catch (error) {
+        console.log(error.message);
+        
         throw new UserInputError(error.message)
       }
 
@@ -200,16 +203,19 @@ const resolvers = {
       return newBook
     },
 
-    editAuthor: (root, args) => {      
-      let author = authors.find(a => a.name === args.name)
+    editAuthor: async (root, args) => {      
+      let author = await Author.findOne({ name: args.name })
 
-      if (!author) {
-        return null
+      author.born = args.setBornTo
+
+      console.log('author', author)
+
+      
+      try {
+        await author.save()
+      } catch (error) {
+        throw new UserInputError(error.message)
       }
-
-      author = { ...author, born: args.setBornTo }
-
-      authors = authors.map(a => a.id === author.id ? author : a)
 
       return author
     },

@@ -35,7 +35,7 @@ const SetBirthYear = ({ ALL_AUTHORS, setError, authors }) => {
         name
         <select name="authors" id="authors" onChange={({ target }) => setName(target.value)}>
           {authors.map(a => 
-            <option value={a.name}>{a.name}</option>
+            <option key={a.id} value={a.name}>{a.name}</option>
           )}
         </select>
       </div>
@@ -76,7 +76,7 @@ const Authors = ({ show, authors, ALL_AUTHORS, setError }) => {
             <tr key={a.name}>
               <td>{a.name}</td>
               <td>{a.born}</td>
-              <td>{a.bookCount}</td>
+              <td>{a.books.length}</td>
             </tr>
           )}
         </tbody>
