@@ -148,13 +148,13 @@ const resolvers = {
       const filteredGenre = args.genre ? filteredAuthor.filter(fa => fa.genres.find(g => g.toLocaleLowerCase() === args.genre.toLocaleLowerCase())) : filteredAuthor
 
       return filteredGenre */
-      return Book.find({})
+      return Book.find({}).populate('author')
     },
     allAuthors: () => {
       /* return authors.map(a => {
         return {...a, bookCount: books.filter(b => b.author === a.name).length}
       }) */
-      return Author.find({})
+      return Author.find({}).populate('books')
     } 
   },
 
@@ -168,6 +168,10 @@ const resolvers = {
         try {
           const book = new Book({ ...args, author: author._id })
           await book.save()
+
+          author = author.books.concat(book._id)
+
+          await author.save()
 
           const newBook = await Book.findById(book._id).populate('author')
 
@@ -184,6 +188,8 @@ const resolvers = {
 
       try {
         await book.save()
+
+        author = author.books.concat(book._id)
         await author.save()
       } catch (error) {
         throw new UserInputError(error.message)
