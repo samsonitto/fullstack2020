@@ -1,9 +1,9 @@
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
-import { useQuery, useMutation } from '@apollo/client'
+import { useQuery, useMutation, useApolloClient } from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS, ME, LOGIN } from './components/queries'
 import LoginForm from './components/LoginForm'
 
@@ -21,7 +21,8 @@ const Notify = ({errorMessage}) => {
 const App = ({ getToken }) => {
   const [page, setPage] = useState('authors')
   const [errorMessage, setErrorMessage] = useState(null)
-  const [token, setToken] = useState('')
+  const [token, setToken] = useState(null)
+  const client = useApolloClient()
 
   const resultAuthors = useQuery(ALL_AUTHORS)
   const resultBooks = useQuery(ALL_BOOKS)
@@ -36,18 +37,29 @@ const App = ({ getToken }) => {
     }, 10000)
   }
 
-  const [ login ] = useMutation(LOGIN, {
+  const [ login, result ] = useMutation(LOGIN, {
     onError: (error) => {
-      notify(error.message)
+      notify(error.graphQLErrors[0].message)
     }
   })
 
+  useEffect(() => {
+    if (result.data) {
+      const token = result.data.login.value
+      setToken(token)
+      localStorage.setItem('user-token', token)
+    }
+  }, [result.data])
+
   const handleLogin = (username, password) => {
-    login({ variables: { username, password }}).then(res => {
-      console.log('token', res.data.login.value)
-      setToken(res.data.login.value)
-      localStorage.setItem('token', res.data.login.value)
-    })
+    login({ variables: { username, password } })
+  }
+
+  const logout = (e) => {
+    e.preventDefault()
+    setToken(null)
+    localStorage.clear()
+    client.resetStore()
   }
   
   if (resultAuthors.loading || resultBooks.loading) {
@@ -60,14 +72,15 @@ const App = ({ getToken }) => {
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         {currentUser.data.me ? <button onClick={() => setPage('add')}>add book</button> : ''}
+        {token ? <button onClick={logout}>logout</button> : ''}
         
       </div>
 
       <Notify errorMessage={errorMessage} />
 
-      {!currentUser.data.me ? 
+      {!token ? 
         <LoginForm setError={notify} login={handleLogin} /> : 
-        <strong>{currentUser.data.me.username} logged in!</strong>
+        ''
       }
 
       <Authors
