@@ -23,10 +23,29 @@ const App = ({ getToken }) => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [token, setToken] = useState(null)
   const client = useApolloClient()
+  const [books, setBooks] = useState([])
+  const [booksToShow, setBooksToShow] = useState([])
+  const [genres, setGenres] = useState([])
 
   const resultAuthors = useQuery(ALL_AUTHORS)
   const resultBooks = useQuery(ALL_BOOKS)
   const currentUser = useQuery(ME)
+
+  useEffect(() => {
+    if(resultBooks.data){
+      setBooks(resultBooks.data.allBooks)
+      setBooksToShow(resultBooks.data.allBooks)
+      let gen = []
+      resultBooks.data.allBooks.forEach(book => {
+        book.genres.forEach(genre => {
+          if(!gen.includes(genre)) {
+            gen.push(genre)
+          }
+        })
+      })
+      setGenres(gen)
+    }
+  }, [resultBooks.data])
 
   console.log('me', currentUser.data)
 
@@ -61,6 +80,15 @@ const App = ({ getToken }) => {
     setToken(null)
     localStorage.clear()
     client.resetStore()
+  }
+
+  const handleGenreClick = (genre) => {
+    if (genre === 'all') {
+      setBooksToShow(books)
+    } else {
+      setBooksToShow(books.filter(b => b.genres.includes(genre)))
+    }
+    
   }
   
   if (resultAuthors.loading || resultBooks.loading) {
@@ -97,7 +125,9 @@ const App = ({ getToken }) => {
 
       <Books
         show={page === 'books'}
-        books={resultBooks.data.allBooks}
+        books={booksToShow}
+        handleGenreClick={handleGenreClick}
+        genres={genres}
       />
 
       <NewBook

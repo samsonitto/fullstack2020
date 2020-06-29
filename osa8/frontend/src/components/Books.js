@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
-const Books = ({ show, books }) => {
+const Books = ({ show, books, handleGenreClick, genres }) => {
+
   if (!show) {
     return null
   }
@@ -29,6 +30,10 @@ const Books = ({ show, books }) => {
           )}
         </tbody>
       </table>
+      {genres.map((g, i) => 
+        <button key={i} onClick={() => handleGenreClick(g)}>{g}</button>
+      )}
+      <button onClick={() => handleGenreClick('all')}>All</button>
     </div>
   )
 }
