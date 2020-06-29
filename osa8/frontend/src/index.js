@@ -7,10 +7,21 @@ import {
 } from '@apollo/client' 
 
 const client = new ApolloClient({
+  request: (operation) => {
+    const token = localStorage.getItem('token')
+    console.log('operation', operation);
+    
+    operation.setContext({
+      headers: {
+        authorization: token ? `Bearer ${token}` : ''
+      }
+    })
+  },
   cache: new InMemoryCache(),
   link: new HttpLink({
     uri: 'http://localhost:4000',
-  })
+  }),
+  
 })
 
 ReactDOM.render(

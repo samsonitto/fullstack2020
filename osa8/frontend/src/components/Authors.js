@@ -1,6 +1,6 @@
   
 import React, { useState } from 'react'
-import { gql, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { EDIT_YEAR } from './queries'
 
 const SetBirthYear = ({ ALL_AUTHORS, setError, authors }) => {
@@ -52,7 +52,7 @@ const SetBirthYear = ({ ALL_AUTHORS, setError, authors }) => {
   )
 }
 
-const Authors = ({ show, authors, ALL_AUTHORS, setError }) => {
+const Authors = ({ show, authors, ALL_AUTHORS, setError, currentUser }) => {
   if (!show) {
     return null
   }
@@ -81,7 +81,7 @@ const Authors = ({ show, authors, ALL_AUTHORS, setError }) => {
           )}
         </tbody>
       </table>
-      <SetBirthYear ALL_AUTHORS={ALL_AUTHORS} setError={setError} authors={authors} />
+      {currentUser ? <SetBirthYear ALL_AUTHORS={ALL_AUTHORS} setError={setError} authors={authors} /> : ''}
     </div>
   )
 }
