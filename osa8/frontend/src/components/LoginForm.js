@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { LOGIN } from './queries'
-import { useMutation } from '@apollo/client'
-import { setContext } from 'apollo-link-context'
 
-const LoginForm = ({ setError, login }) => {
+const LoginForm = ({ login, show }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [token, setToken] = useState('')
+
+  if (!show) {
+    return null
+  }
 
   const handleLogin = (e) => {
     e.preventDefault()
@@ -15,13 +15,16 @@ const LoginForm = ({ setError, login }) => {
 
     setUsername('')
     setPassword('')
+
+    document.getElementById('username').value = ''
+    document.getElementById('pw').value = ''
   }
 
   return (
     <form onSubmit={handleLogin}>
       <h3>Login</h3>
-      Username:<input placeholder='username...' type='text' onChange={(e) => setUsername(e.target.value)} /><br />
-      Password:<input placeholder='password...' type='password' onChange={(e) => setPassword(e.target.value)} /><br />
+      Username:<input id='username' placeholder='username...' type='text' onChange={(e) => setUsername(e.target.value)} /><br />
+      Password:<input id='pw' placeholder='password...' type='password' onChange={(e) => setPassword(e.target.value)} /><br />
       <button>Submit</button>
     </form>
   )

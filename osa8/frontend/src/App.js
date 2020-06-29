@@ -53,6 +53,7 @@ const App = ({ getToken }) => {
 
   const handleLogin = (username, password) => {
     login({ variables: { username, password } })
+    setPage('authors')
   }
 
   const logout = (e) => {
@@ -72,16 +73,19 @@ const App = ({ getToken }) => {
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         {currentUser.data.me ? <button onClick={() => setPage('add')}>add book</button> : ''}
-        {token ? <button onClick={logout}>logout</button> : ''}
+        {currentUser.data.me ? 
+          <button onClick={logout}>logout</button> : 
+          <button onClick={() => setPage('login')}>login</button>
+        }
         
       </div>
 
       <Notify errorMessage={errorMessage} />
 
-      {!token ? 
-        <LoginForm setError={notify} login={handleLogin} /> : 
-        ''
-      }
+      <LoginForm 
+        show={page === 'login'}
+        setError={notify} 
+        login={handleLogin} />
 
       <Authors
         show={page === 'authors'}
