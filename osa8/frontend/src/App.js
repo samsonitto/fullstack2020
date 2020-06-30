@@ -6,6 +6,7 @@ import NewBook from './components/NewBook'
 import { useQuery, useMutation, useApolloClient } from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS, ME, LOGIN } from './components/queries'
 import LoginForm from './components/LoginForm'
+import Recommend from './components/Recommend'
 
 const Notify = ({errorMessage}) => {
   if ( !errorMessage ) {
@@ -25,6 +26,7 @@ const App = ({ getToken }) => {
   const client = useApolloClient()
   const [books, setBooks] = useState([])
   const [booksToShow, setBooksToShow] = useState([])
+  const [recommendedBooks, setRecommendedBooks] = useState([])
   const [genres, setGenres] = useState([])
 
   const resultAuthors = useQuery(ALL_AUTHORS)
@@ -44,6 +46,16 @@ const App = ({ getToken }) => {
         })
       })
       setGenres(gen)
+    }
+
+    if(currentUser.data && resultBooks.data) {
+      let rec = []
+      resultBooks.data.allBooks.forEach(book => {
+        if (book.genres.includes(currentUser.data.me.favoriteGenre)) {
+          rec.push(book)
+        }
+        setRecommendedBooks(rec)
+      })
     }
   }, [resultBooks.data])
 
@@ -100,7 +112,14 @@ const App = ({ getToken }) => {
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
-        {currentUser.data.me ? <button onClick={() => setPage('add')}>add book</button> : ''}
+        {currentUser.data.me ? 
+          <>
+            <button onClick={() => setPage('add')}>add book</button>
+            <button onClick={() => setPage('recommend')}>recommend</button>
+          </>
+           : 
+          ''
+        }
         {currentUser.data.me ? 
           <button onClick={logout}>logout</button> : 
           <button onClick={() => setPage('login')}>login</button>
@@ -135,6 +154,11 @@ const App = ({ getToken }) => {
         ALL_AUTHORS={ALL_AUTHORS}
         ALL_BOOKS={ALL_BOOKS}
         setError={notify}
+      />
+
+      <Recommend 
+        show={page === 'recommend'} 
+        recommendedBooks={recommendedBooks}
       />
 
     </div>
