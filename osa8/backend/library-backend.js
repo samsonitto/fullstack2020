@@ -84,17 +84,17 @@ const resolvers = {
   Query: {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
-    allBooks: (root, args, context) => {
-      /* const filteredAuthor = args.author ? books.filter(b => b.author === args.author) : books
-      const filteredGenre = args.genre ? filteredAuthor.filter(fa => fa.genres.find(g => g.toLocaleLowerCase() === args.genre.toLocaleLowerCase())) : filteredAuthor
-
-      return filteredGenre */
+    allBooks: async (root, args, context) => {
+      if(args.genre) {
+        const books = await Book.find({}).populate('author')
+        console.log('books', books);
+        
+        return books.filter(book => book.genres.includes(args.genre))
+      }
+      
       return Book.find({}).populate('author')
     },
     allAuthors: () => {
-      /* return authors.map(a => {
-        return {...a, bookCount: books.filter(b => b.author === a.name).length}
-      }) */
       return Author.find({}).populate('books')
     },
     me: (root, args, context) => {
@@ -164,9 +164,6 @@ const resolvers = {
       }
 
       author.born = args.setBornTo
-
-      console.log('author', author)
-
       
       try {
         await author.save()
@@ -190,11 +187,7 @@ const resolvers = {
 
     login: async (root, args, context) => {
       const user = await User.findOne({ username: args.username })
-
-      console.log('user', user)
-      console.log('pw', args.password)
       
-  
       if ( !user || args.password !== 'secret' ) {
         throw new UserInputError("wrong credentials")
       }
@@ -213,7 +206,6 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ req }) => {
-    console.log('req', req.headers.authorization);
     
     const auth = req ? req.headers.authorization : null
     if (auth && auth.toLowerCase().startsWith('bearer ')) {
@@ -222,7 +214,6 @@ const server = new ApolloServer({
       )
       const currentUser = await User
         .findById(decodedToken.id).populate('friends')
-      console.log('currentUser', currentUser);
       
       return { currentUser }
     }

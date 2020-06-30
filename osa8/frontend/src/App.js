@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
-import { useQuery, useMutation, useApolloClient } from '@apollo/client'
+import { useQuery, useMutation, useApolloClient, useLazyQuery } from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS, ME, LOGIN } from './components/queries'
 import LoginForm from './components/LoginForm'
 import Recommend from './components/Recommend'
@@ -28,10 +28,13 @@ const App = ({ getToken }) => {
   const [booksToShow, setBooksToShow] = useState([])
   const [recommendedBooks, setRecommendedBooks] = useState([])
   const [genres, setGenres] = useState([])
+  const [selectedGenre, setSelectedGenre] = useState([])
 
   const resultAuthors = useQuery(ALL_AUTHORS)
   const resultBooks = useQuery(ALL_BOOKS)
   const currentUser = useQuery(ME)
+  const filteredBooks = useQuery(ALL_BOOKS, { variables: { genre: currentUser.data ? currentUser.data.me.favoriteGenre : null } })
+  const filteredByGenre = useQuery(ALL_BOOKS, selectedGenre.length > 0 ? { variables: { genre: selectedGenre[0] } } : undefined)
 
   useEffect(() => {
     if(resultBooks.data){
@@ -47,17 +50,20 @@ const App = ({ getToken }) => {
       })
       setGenres(gen)
     }
-
-    if(currentUser.data && resultBooks.data) {
-      let rec = []
-      resultBooks.data.allBooks.forEach(book => {
-        if (book.genres.includes(currentUser.data.me.favoriteGenre)) {
-          rec.push(book)
-        }
-        setRecommendedBooks(rec)
-      })
-    }
   }, [resultBooks.data])
+
+  useEffect(() => {
+    if(currentUser.data && filteredBooks.data) {
+      console.log('filtered', filteredBooks.data)
+      setRecommendedBooks(filteredBooks.data.allBooks)
+    }
+  }, [filteredBooks.data])
+
+  useEffect(() => {
+    setBooksToShow(filteredByGenre.data ? filteredByGenre.data.allBooks : [])
+    console.log('filteredByGenre', filteredByGenre.data)
+    
+  }, [selectedGenre])
 
   console.log('me', currentUser.data)
 
@@ -98,8 +104,9 @@ const App = ({ getToken }) => {
     if (genre === 'all') {
       setBooksToShow(books)
     } else {
-      setBooksToShow(books.filter(b => b.genres.includes(genre)))
+      setSelectedGenre([genre])
     }
+    console.log('selected', selectedGenre);
     
   }
   
