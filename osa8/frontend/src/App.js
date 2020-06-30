@@ -100,11 +100,11 @@ const App = ({ getToken }) => {
     client.resetStore()
   }
 
-  const handleGenreClick = (genre) => {
+  const handleGenreClick = async (genre) => {
     if (genre === 'all') {
-      setBooksToShow(books)
+      await setBooksToShow(books)
     } else {
-      setSelectedGenre([genre])
+      await setSelectedGenre([genre])
     }
     console.log('selected', selectedGenre);
     
