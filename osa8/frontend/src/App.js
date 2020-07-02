@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
-import { useQuery, useMutation, useApolloClient, useLazyQuery } from '@apollo/client'
-import { ALL_AUTHORS, ALL_BOOKS, ME, LOGIN } from './components/queries'
+import { useQuery, useMutation, useApolloClient, useLazyQuery, useSubscription } from '@apollo/client'
+import { ALL_AUTHORS, ALL_BOOKS, ME, LOGIN, BOOK_ADDED } from './components/queries'
 import LoginForm from './components/LoginForm'
 import Recommend from './components/Recommend'
 
@@ -34,7 +34,21 @@ const App = ({ getToken }) => {
   const resultBooks = useQuery(ALL_BOOKS)
   const currentUser = useQuery(ME)
   const filteredBooks = useQuery(ALL_BOOKS, { variables: { genre: currentUser.data ? currentUser.data.me.favoriteGenre : null } })
-  const filteredByGenre = useQuery(ALL_BOOKS, selectedGenre.length > 0 ? { variables: { genre: selectedGenre[0] } } : undefined)
+  const filteredByGenre = useQuery(ALL_BOOKS, 
+    selectedGenre.length > 0 ? { variables: { genre: selectedGenre[0] } } : undefined,
+    {
+      onError: (error => {
+        notify(error.graphQLErrors[0].message)
+      })
+    }
+  )
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log(subscriptionData)
+      notify(`${subscriptionData.bookAdded.title} has been added`)
+    }
+  })
 
   useEffect(() => {
     if(resultBooks.data){
