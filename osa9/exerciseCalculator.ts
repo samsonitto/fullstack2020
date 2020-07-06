@@ -8,6 +8,27 @@ interface TrainingOverview {
   average: number
 }
 
+interface CheckValues {
+  value1: number;
+  value2: Array<number>;
+}
+
+const parseArguments = (args: Array<string>): CheckValues => {
+
+  const numbers = args.filter(n => !isNaN(Number(n)))
+
+  if (numbers.length === (args.length - 2)) {
+    const value1 = numbers[0]
+    const value2 = numbers.slice(1)
+    return {
+      value1: Number(value1),
+      value2: value2.map(a => Number(a))
+    }
+  } else {
+    throw new Error('Provided values were not numbers')
+  }
+}
+
 const calculateExercises = (hours: Array<number>, target: number) : TrainingOverview => {
   const periodLength = hours.length;
   const trainingDays = hours.filter(h => h > 0).length;
@@ -55,4 +76,10 @@ const calculateExercises = (hours: Array<number>, target: number) : TrainingOver
   }
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+try {
+  const { value1, value2 } = parseArguments(process.argv);
+  console.log(calculateExercises(value2, value1));
+} catch (error) {
+  console.log('Error, something bad happened, message: ', error.message);
+}
+//console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
