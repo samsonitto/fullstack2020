@@ -15,46 +15,46 @@ interface CheckValues {
 
 const parseArguments = (args: Array<string>): CheckValues => {
 
-  const numbers = args.filter(n => !isNaN(Number(n)))
+  const numbers = args.filter(n => !isNaN(Number(n)));
 
   if (numbers.length === (args.length - 2)) {
-    const value1 = numbers[0]
-    const value2 = numbers.slice(1)
+    const value1 = numbers[0];
+    const value2 = numbers.slice(1);
     return {
       value1: Number(value1),
       value2: value2.map(a => Number(a))
-    }
+    };
   } else {
-    throw new Error('Provided values were not numbers')
+    throw new Error('Provided values were not numbers');
   }
-}
+};
 
 const calculateExercises = (hours: Array<number>, target: number) : TrainingOverview => {
   const periodLength = hours.length;
   const trainingDays = hours.filter(h => h > 0).length;
-  const average = (hours.reduce((a, b) => a + b, 0)) / periodLength
+  const average = (hours.reduce((a, b) => a + b, 0)) / periodLength;
   let rating;
   const calcRating = () => {
-    const diff = average - target
+    const diff = average - target;
     if (diff >= 0 && diff < 0.5) {
-      rating = 3
+      rating = 3;
     }
     else if (diff >= 0.5 && diff < 1) {
-      rating = 4
+      rating = 4;
     }
     else if (diff >= 1) {
-      rating = 5
+      rating = 5;
     }
     else if (diff < 0 && diff >= -0.5) {
-      rating = 2
+      rating = 2;
     }
     else if (diff < -0.5 && diff >= -1) {
-      rating = 1
+      rating = 1;
     }
     else if (diff < -1) {
-      rating = 0
-    }
-  }
+      rating = 0;
+    } 
+  };
   calcRating();
   const success = average >= target ? true : false;
   const ratingDescription = 
@@ -73,8 +73,8 @@ const calculateExercises = (hours: Array<number>, target: number) : TrainingOver
     ratingDescription,
     target,
     average
-  }
-}
+  };
+};
 
 try {
   const { value1, value2 } = parseArguments(process.argv);

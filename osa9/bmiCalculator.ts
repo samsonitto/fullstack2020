@@ -13,30 +13,30 @@ const parseValues = (args: Array<string>): CheckBmiValues => {
     return {
       value1: Number(args[2]),
       value2: Number(args[3])
-    }
+    };
   } else {
     throw new Error('Provided values were not numbers!');
   }
-}
+};
 
 export const bmi = (height: number, weight: number) : Result => {
   const calculatedBmi: number = weight / ((height/100)**2);
   
   if (calculatedBmi < 18.5) {
-    return 'Underweight (eat more)'
+    return 'Underweight (eat more)';
   }
   else if (calculatedBmi >= 18.5 && calculatedBmi < 25) {
-    return 'Normal (healthy weight)'
+    return 'Normal (healthy weight)';
   }
   else if (calculatedBmi >= 25 && calculatedBmi < 30) {
-    return 'Overweight (exercise more)'
+    return 'Overweight (exercise more)';
   }
   else if (calculatedBmi > 30) {
-    return 'Obese (exercise more and stop eating shit)'
+    return 'Obese (exercise more and stop eating shit)';
   } else {
-    throw new Error('Provided values are not numbers')
+    throw new Error('Provided values are not numbers');
   }
-}
+};
 
 try {
   const { value1, value2 } = parseValues(process.argv);
