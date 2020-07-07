@@ -19,7 +19,7 @@ const parseValues = (args: Array<string>): CheckBmiValues => {
   }
 }
 
-const bmi = (height: number, weight: number) : Result => {
+export const bmi = (height: number, weight: number) : Result => {
   const calculatedBmi: number = weight / ((height/100)**2);
   
   if (calculatedBmi < 18.5) {
@@ -33,6 +33,8 @@ const bmi = (height: number, weight: number) : Result => {
   }
   else if (calculatedBmi > 30) {
     return 'Obese (exercise more and stop eating shit)'
+  } else {
+    throw new Error('Provided values are not numbers')
   }
 }
 
