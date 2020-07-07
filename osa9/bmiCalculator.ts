@@ -42,6 +42,7 @@ try {
   const { value1, value2 } = parseValues(process.argv);
   console.log(bmi(value1, value2));  
 } catch (error) {
+  // eslint-disable-next-line
   console.log('Error, something bad happened, message: ', error.message);
 }
 

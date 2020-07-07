@@ -29,33 +29,28 @@ const parseArguments = (args: Array<string>): CheckValues => {
   }
 };
 
-const calculateExercises = (hours: Array<number>, target: number) : TrainingOverview => {
+export const calculateExercises = (hours: Array<number>, target: number) : TrainingOverview => {
+  if (!hours || !target) {
+    throw new Error('Parameters missing')
+  }
+
+  const numbers = hours.filter(n => !isNaN(Number(n)));
+  if (numbers.length !== hours.length || isNaN(target)) {
+    throw new Error('Provided values were not numbers')
+  }
+
   const periodLength = hours.length;
   const trainingDays = hours.filter(h => h > 0).length;
   const average = (hours.reduce((a, b) => a + b, 0)) / periodLength;
-  let rating;
-  const calcRating = () => {
-    const diff = average - target;
-    if (diff >= 0 && diff < 0.5) {
-      rating = 3;
-    }
-    else if (diff >= 0.5 && diff < 1) {
-      rating = 4;
-    }
-    else if (diff >= 1) {
-      rating = 5;
-    }
-    else if (diff < 0 && diff >= -0.5) {
-      rating = 2;
-    }
-    else if (diff < -0.5 && diff >= -1) {
-      rating = 1;
-    }
-    else if (diff < -1) {
-      rating = 0;
-    } 
-  };
-  calcRating();
+  const diff = average - target;
+  const rating = 
+    diff >= 0 && diff < 0.5 ? 3 :
+    diff >= 0.5 && diff < 1 ? 4 :
+    diff >= 1 ? 5 :
+    diff < 0 && diff >= -0.5 ? 2 :
+    diff < -0.5 && diff >= -1 ? 1 :
+    0
+  
   const success = average >= target ? true : false;
   const ratingDescription = 
     rating === 0 ? 'Terrible! You did not do anything!' : 
@@ -80,6 +75,7 @@ try {
   const { value1, value2 } = parseArguments(process.argv);
   console.log(calculateExercises(value2, value1));
 } catch (error) {
+  // eslint-disable-next-line
   console.log('Error, something bad happened, message: ', error.message);
 }
 //console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
