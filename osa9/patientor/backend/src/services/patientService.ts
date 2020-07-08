@@ -1,4 +1,4 @@
-import patientData from '../../data/patients.json'
+import patientData from '../../data/patients'
 
 import { Patient, NonSensitivePatientData, NewPatient } from '../types';
 
