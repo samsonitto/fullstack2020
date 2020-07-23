@@ -2,6 +2,7 @@ import React, { CSSProperties, useState, useEffect } from "react";
 import { useStateValue } from "../state";
 import { Header, Icon } from "semantic-ui-react";
 import { Patient, Diagnose } from '../types';
+import EntryDetails from "./EntryDetails";
 
 const PatientPage: React.FC = () => {
   const [{ patient, diagnoses }, ] = useStateValue();
@@ -26,6 +27,8 @@ const PatientPage: React.FC = () => {
   const style: CSSProperties = {
     margin: 0
   }
+
+  console.log(activePatient);
   return (
     <>
       {/* {Object.values(patient).map((p, i) => 
@@ -42,12 +45,7 @@ const PatientPage: React.FC = () => {
 
         <h3>entries</h3>
         {activePatient?.entries.map(e =>
-          <div key={e.id}>
-            <p>{e.date} <i>{e.description}</i></p>
-            {activeDiagnoses?.map(ad =>
-            <li key={ad.code}><strong>{ad.code}</strong> {ad.name}</li>  
-            )}
-          </div>
+          <EntryDetails entry={e} key={e.id} />
         )}
       </div>
     </>
