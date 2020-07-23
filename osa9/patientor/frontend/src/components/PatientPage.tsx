@@ -1,17 +1,27 @@
 import React, { CSSProperties, useState, useEffect } from "react";
 import { useStateValue } from "../state";
 import { Header, Icon } from "semantic-ui-react";
-import { Patient } from '../types';
+import { Patient, Diagnose } from '../types';
 
 const PatientPage: React.FC = () => {
-  const [{ patient }, ] = useStateValue();
+  const [{ patient, diagnoses }, ] = useStateValue();
   const [activePatient, setActivePatient] = useState<Patient | undefined>();
+  const [activeDiagnoses, setActiveDiagnoses] = useState<Diagnose[] | undefined>();
 
   useEffect(() => {
-    setActivePatient(Object.values(patient)[0])
+    setActivePatient(Object.values(patient)[0]);
+    let dias: Array<Diagnose> = [];
+    Object.values(diagnoses).forEach(d => {
+      Object.values(patient)[0]?.entries.forEach(e => {
+        e.diagnosisCodes?.forEach(dc => {
+          if (dc === d.code) {
+            dias.push(d);
+          };
+        })
+      })
+    });
+    setActiveDiagnoses(dias);
   },[patient])
-
-  console.log(activePatient);
 
   const style: CSSProperties = {
     margin: 0
@@ -34,8 +44,8 @@ const PatientPage: React.FC = () => {
         {activePatient?.entries.map(e =>
           <div key={e.id}>
             <p>{e.date} <i>{e.description}</i></p>
-            {e.diagnosisCodes?.map(dc => 
-              <li><strong>{dc}</strong></li>
+            {activeDiagnoses?.map(ad =>
+            <li key={ad.code}><strong>{ad.code}</strong> {ad.name}</li>  
             )}
           </div>
         )}
