@@ -11,6 +11,8 @@ const PatientPage: React.FC = () => {
     setActivePatient(Object.values(patient)[0])
   },[patient])
 
+  console.log(activePatient);
+
   const style: CSSProperties = {
     margin: 0
   }
@@ -25,8 +27,18 @@ const PatientPage: React.FC = () => {
       )} */}
       <div>
         <Header as='h2'>{activePatient?.name}{' '}<Icon name={activePatient?.gender === 'male' ? 'man' : activePatient?.gender === 'other' ? 'intergender' : 'woman'} /></Header>
-        <h4 style={style}>ssn: {activePatient?.ssn}</h4> 
-        <h4 style={style}>occupation: {activePatient?.occupation}</h4> 
+        <p style={style}>ssn: {activePatient?.ssn}</p> 
+        <p style={style}>occupation: {activePatient?.occupation}</p>
+
+        <h3>entries</h3>
+        {activePatient?.entries.map(e =>
+          <div key={e.id}>
+            <p>{e.date} <i>{e.description}</i></p>
+            {e.diagnosisCodes?.map(dc => 
+              <li><strong>{dc}</strong></li>
+            )}
+          </div>
+        )}
       </div>
     </>
   )
