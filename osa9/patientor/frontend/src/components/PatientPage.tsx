@@ -24,7 +24,7 @@ const PatientPage: React.FC = () => {
         </div>
       )} */}
       <div>
-        <Header as='h2'>{activePatient?.name}{' '}<Icon name={activePatient?.gender === 'male' ? 'man' : 'woman'} /></Header>
+        <Header as='h2'>{activePatient?.name}{' '}<Icon name={activePatient?.gender === 'male' ? 'man' : activePatient?.gender === 'other' ? 'intergender' : 'woman'} /></Header>
         <h4 style={style}>ssn: {activePatient?.ssn}</h4> 
         <h4 style={style}>occupation: {activePatient?.occupation}</h4> 
       </div>

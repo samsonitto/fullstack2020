@@ -9,6 +9,7 @@ import { apiBaseUrl } from "../constants";
 import HealthRatingBar from "../components/HealthRatingBar";
 import { useStateValue } from "../state";
 import { Link } from "react-router-dom";
+import { addPatient } from "../state";
 
 const PatientListPage: React.FC<{ showPatient(id: string): void }> = ({ showPatient }) => {
   const [{ patients }, dispatch] = useStateValue();
@@ -29,7 +30,7 @@ const PatientListPage: React.FC<{ showPatient(id: string): void }> = ({ showPati
         `${apiBaseUrl}/api/patients`,
         values
       );
-      dispatch({ type: "ADD_PATIENT", payload: newPatient });
+      dispatch(addPatient(newPatient));
       closeModal();
     } catch (e) {
       console.error(e.response.data);
