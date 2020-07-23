@@ -19,7 +19,7 @@ const Hospital: React.FC<{ entry: Entry }> = ({ entry }) => {
   )
 }
 
-const HealthCheck: React.FC<{ entry: any }> = ({ entry }) => {
+const HealthCheck: React.FC<{ entry: any }> = ({ entry }) => { // Oli pakko laittaa 'any', jostain syystä healthCheck ei löytynyt
   return (
     <Card>
       <Card.Content>
