@@ -20,6 +20,20 @@ router.post('/', (req, res) => {
   }
 });
 
+router.post('/:id/entries', (req, res) => {
+  try {
+    //const patient = patientService.findById(req.params.id)
+    const newEntry = req.body;
+    const addedEntry = patientService.addEntry(newEntry)
+
+    res.json(addedEntry)
+
+    
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
+
 router.get('/:id', (req, res) => {
   const patient = patientService.findById(req.params.id)
 
