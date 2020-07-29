@@ -34,17 +34,18 @@ const findById = (id: string): Patient | undefined => {
   return patient;
 };
 
-const addEntry = (entry: NewEntry): Entry | undefined => {
+const addEntry = (entry: NewEntry, patientId: string): Patient | undefined => {
   
   const newEntry = {
     id: uuidv4(),
+    date: new Date().toISOString().slice(0,10),
     ...entry
   }
-  //patientData.find(p => p.id === patientId)?.entries.push(newEntry as Entry);
 
-  //const patient = patients.find(p => p.id === patientId);
+  const patient = patients.find(p => p.id === patientId);
+  patient?.entries.push(newEntry as Entry)
 
-  return newEntry as Entry;
+  return patient;
 }
 
 export default {

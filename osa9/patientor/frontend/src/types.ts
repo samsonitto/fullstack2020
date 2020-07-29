@@ -38,7 +38,7 @@ export enum HealthCheckRating {
 
 interface HealthCheckEntry extends BaseEntry {
   type: "HealthCheck";
-  healthCheckRating: HealthCheckRating;
+  healthCheckRating?: HealthCheckRating;
 }
 
 interface Discharge {
@@ -46,7 +46,7 @@ interface Discharge {
   criteria: string;
 }
 
-interface HospitalEntry extends BaseEntry {
+export interface HospitalEntry extends BaseEntry {
   type: "Hospital";
   discharge: Discharge;
 }
