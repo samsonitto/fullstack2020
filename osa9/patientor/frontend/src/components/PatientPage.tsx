@@ -14,6 +14,7 @@ const PatientPage: React.FC = () => {
   const [activeDiagnoses, setActiveDiagnoses] = useState<Diagnose[] | undefined>();
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
+  const [type, setType] = useState<string>("");
 
   useEffect(() => {
     setActivePatient(Object.values(patient)[0]);
@@ -30,7 +31,10 @@ const PatientPage: React.FC = () => {
     setActiveDiagnoses(dias);
   },[patient])
 
-  const openModal = (): void => setModalOpen(true);
+  const openModal = (type: string): void => {
+    setType(type);
+    setModalOpen(true);
+  }
 
   const closeModal = (): void => {
     setModalOpen(false);
@@ -38,11 +42,13 @@ const PatientPage: React.FC = () => {
   };
 
   const submitNewEntry = async (values: EntryFormValues) => {
+    console.log(values);
     try {
       const { data: newEntry } = await axios.post<Patient>(
         `${apiBaseUrl}/api/patients/${activePatient?.id}/entries`,
         values
       );
+      console.log(newEntry);
       dispatch(addEntry(newEntry));
       closeModal();
     } catch (e) {
@@ -75,8 +81,10 @@ const PatientPage: React.FC = () => {
           <EntryDetails entry={e} key={e.id} />
         )}
         <div>
-          <AddEntryModal onClose={closeModal} error={error} onSubmit={submitNewEntry} modalOpen={modalOpen} />
-          <Button onClick={() => openModal()}>Add New Entry</Button>
+          <AddEntryModal onClose={closeModal} error={error} onSubmit={submitNewEntry} modalOpen={modalOpen} type={type} />
+          <Button onClick={() => openModal("Hospital")}>Add New Hospital Entry</Button>
+          <Button onClick={() => openModal("Health Check")}>Add New Health Check Entry</Button>
+          {/* <Button onClick={() => openModal("Occupational")}>Add New Occupational Health Check Entry</Button> */}
         </div>
       </div>
     </>
