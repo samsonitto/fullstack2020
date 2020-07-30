@@ -13,7 +13,7 @@ const HealthCheckForm: React.FC<Props> = ({ onSubmit, onCancel, type}) => {
         type: "HealthCheck",
         description: "",
         specialist: "",
-        diagnosisCodes: undefined,
+        diagnosisCodes: [],
         healthCheckRating: 0
       }}
       onSubmit={onSubmit}

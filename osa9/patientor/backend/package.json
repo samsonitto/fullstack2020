@@ -22,9 +22,11 @@
   },
   "dependencies": {
     "@types/cors": "^2.8.6",
+    "@types/moment": "^2.13.0",
     "@types/uuid": "^8.0.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "moment": "^2.27.0",
     "uuid": "^8.3.0"
   }
 }

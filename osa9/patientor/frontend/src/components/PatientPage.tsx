@@ -1,6 +1,6 @@
 import React, { CSSProperties, useState, useEffect } from "react";
 import { useStateValue, addEntry } from "../state";
-import { Header, Icon, Button } from "semantic-ui-react";
+import { Header, Icon, Button, Select } from "semantic-ui-react";
 import { Patient, Diagnose } from '../types';
 import EntryDetails from "./EntryDetails";
 import { EntryFormValues } from "../AddEntryModal/AddEntryForm";
@@ -61,6 +61,16 @@ const PatientPage: React.FC = () => {
     margin: 0
   }
 
+  const options = [
+    { text: "Hospital", value: "Hospital"},
+    { text: "Health Check", value: "Health Check"},
+    { text: "Occupational Health Check", value: "Occupational"},
+  ]
+
+  const handleChange = (e: any) => {
+    console.log(e)
+  }
+
   console.log(activePatient);
   return (
     <>
@@ -82,9 +92,10 @@ const PatientPage: React.FC = () => {
         )}
         <div>
           <AddEntryModal onClose={closeModal} error={error} onSubmit={submitNewEntry} modalOpen={modalOpen} type={type} />
+          {/* <Select options={options} onChange={handleChange}></Select> */}
           <Button onClick={() => openModal("Hospital")}>Add New Hospital Entry</Button>
           <Button onClick={() => openModal("Health Check")}>Add New Health Check Entry</Button>
-          {/* <Button onClick={() => openModal("Occupational")}>Add New Occupational Health Check Entry</Button> */}
+          <Button onClick={() => openModal("Occupational")}>Add New Occupational Health Check Entry</Button>
         </div>
       </div>
     </>

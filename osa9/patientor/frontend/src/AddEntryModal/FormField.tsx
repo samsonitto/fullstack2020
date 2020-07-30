@@ -64,6 +64,7 @@ export const SelectHealthField: React.FC<SelectHealthFieldProps> = ({
 interface TextProps extends FieldProps {
   label: string;
   placeholder: string;
+  id: string;
 }
 
 export const TextField: React.FC<TextProps> = ({
@@ -76,6 +77,21 @@ export const TextField: React.FC<TextProps> = ({
     <Field placeholder={placeholder} {...field} />
     <div style={{ color:'red' }}>
       <ErrorMessage name={field.name} />
+    </div>
+  </Form.Field>
+);
+
+export const TextFieldObject: React.FC<TextProps> = ({
+  field,
+  label,
+  placeholder,
+  id
+}) => (
+  <Form.Field>
+    <label>{label}</label>
+    <Field placeholder={placeholder} {...field} />
+    <div style={{ color:'red' }}>
+      <ErrorMessage name={id} />
     </div>
   </Form.Field>
 );
